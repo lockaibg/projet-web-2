@@ -127,14 +127,28 @@
                 $recettes = array_merge($recettes, trouverRecettes($ingredient, $Recettes));
             }
             foreach($recettes as $recette) {?>
-                <div id ="<?php echo $recette;?>">
-                    <?php echo $recette;?>
-                </div><?php
+                <div id ="<?php echo $recette;?>" style="border: solid;">
+                    <?php echo $recette;?> 
+                <?php
+                //afficher la photo si elle existe
                 $textPhoto = "Photos/".str_replace(' ', '_', $recette).".jpg";
                 if(file_exists($textPhoto)){?>
                     <img src="<?php echo $textPhoto?>" alt="<?php echo $textPhoto?>" height="200"/>
                     <?php
+                } else {
+                    ?><img src="Photos/default.jpg" alt="default for <?php echo $textPhoto?>" height="200"/><?php
                 }
+                foreach($Recettes as $recInfos) {
+                    if($recInfos['titre'] === $recette) {
+                        ?><ul><?php
+                        foreach($recInfos['index'] as $ingr) {
+                            echo "<li>".$ingr."</li>";
+                        }
+                        break;
+                        ?></ul><?php
+                    }
+                }
+                ?></div><?php
             }
         ?>
     </div>
