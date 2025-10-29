@@ -1,6 +1,10 @@
 <?php
     include "Donnees.inc.php";
     session_start();
+
+    $totalAliment = array();
+
+    //initialiser les varriable filAriane et fil pour la suite
     if(isset($_SESSION["filAriane"])) { 
         $fil = $_SESSION["filAriane"];
         $filArray = explode(".", $fil);
@@ -31,7 +35,32 @@
             }
         }
     }
-    
+
+    //fonction pour trouver toutes les feuilles de l'algorythme a partir de la clef sur laquel on est actuellement
+    function trouverToutDescendant($node, $hierarchie){
+        if(empty($hierarchie[$node]['sous-categorie'])){
+            return [$node];
+        }
+        $retourArray = array(0 => $node);
+        foreach($hierarchie[$node]["sous-categorie"] as $elems){
+            $retourArray = array_merge($retourArray, trouverToutDescendant($elems, $hierarchie));
+        }
+        return $retourArray;
+    }
+
+    //fonction permettant de trouver une recette a partir d'un ingrédient passer en parametre
+    function trouverRecettes($ingredient, $recettes){
+        $retour = [];
+        foreach($recettes as $recette) {
+            foreach($recette['index'] as $ingredients){
+                if($ingredients === $ingredient){
+                    array_push($retour, $recette['titre']);
+                    break;
+                }
+            }
+        }
+        return $retour;
+    }
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -39,38 +68,36 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/> 
     <title><?php echo $select?></title>
-    <link rel="stylesheet" href="../styles.css">
-</head>
-<script>
-    //script utilisé pour update la varriable de session visant a garder en mémoire le fil d'ariane
-    const beforeAriane = "<?php echo addslashes($fil); ?>";
-    window.onload = function () {
-        document.querySelectorAll(".elemClickable").forEach(lien => {
-            lien.addEventListener("click", async (event) => {
-                event.preventDefault();
-                const id = event.currentTarget.id;
-                await fetch("majSession.php", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                    body: "cle=filAriane&valeur="+encodeURIComponent(beforeAriane + id + "."),
-                    keepalive: true
+    <link rel="stylesheet" href="../styles.css">    
+    <script>
+        //script utilisé pour update la varriable de session visant a garder en mémoire le fil d'ariane
+        const beforeAriane = "<?php echo addslashes($fil); ?>";
+        window.onload = function () {
+            document.querySelectorAll(".elemClickable").forEach(lien => {
+                lien.addEventListener("click", async (event) => {
+                    event.preventDefault();
+                    const id = event.currentTarget.id;
+                    await fetch("majSession.php", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                        body: "cle=filAriane&valeur="+encodeURIComponent(beforeAriane + id + "."),
+                        keepalive: true
+                    });
+                    console.log(id);
+                    window.location.href = lien.href;
                 });
-                console.log(id);
-                window.location.href = lien.href;
             });
-        });
-    }
-</script>
+        }
+    </script>
+</head>
 <body>
+    <!--afficher le fil d'ariane si il existe-->
     <?php 
-        
         if ($fil != "") {
-        //afficher le fil d'ariane si il existe
-    ?>
-        <div id="filAriane"><?php echo $fil?></div>
-    <?php
+            ?><div id="filAriane"><?php echo $fil?></div><?php
         }
     ?>
+    <!--Séction contenant la navigation-->
     <div id="selection" style="border: solid;">
         <ul>
         <?php
@@ -90,5 +117,25 @@
         ?>
         </ul>
 
+    </div>
+    <!--séction contenant les recettes synthétiques-->
+    <div id="recettes">
+        <?php
+            $ingredients = trouverToutDescendant($select, $Hierarchie);
+            $recettes = array();
+            foreach($ingredients as $ingredient) {
+                $recettes = array_merge($recettes, trouverRecettes($ingredient, $Recettes));
+            }
+            foreach($recettes as $recette) {?>
+                <div id ="<?php echo $recette;?>">
+                    <?php echo $recette;?>
+                </div><?php
+                $textPhoto = "Photos/".str_replace(' ', '_', $recette).".jpg";
+                if(file_exists($textPhoto)){?>
+                    <img src="<?php echo $textPhoto?>" alt="<?php echo $textPhoto?>" height="200"/>
+                    <?php
+                }
+            }
+        ?>
     </div>
 </body>
