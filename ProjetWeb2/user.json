@@ -1,0 +1,52 @@
+[
+    {
+        "login": "admin",
+        "mdp": "admin",
+        "sexe": "f",
+        "name": "",
+        "prenom": "",
+        "naissance": ""
+    },
+    {
+        "login": "test2",
+        "mdp": "test2",
+        "name": "zqfq",
+        "prenom": "zgfq",
+        "naissance": "2005-02-10"
+    },
+    {
+        "login": "admin",
+        "mdp": "admin",
+        "name": "",
+        "prenom": "",
+        "naissance": ""
+    },
+    {
+        "login": "admin",
+        "mdp": "admin",
+        "name": "",
+        "prenom": "",
+        "naissance": ""
+    },
+    {
+        "login": "admin",
+        "mdp": "admin",
+        "name": "",
+        "prenom": "",
+        "naissance": ""
+    },
+    {
+        "login": "\"qfzz",
+        "mdp": "admin",
+        "name": "",
+        "prenom": "",
+        "naissance": ""
+    },
+    {
+        "login": "adqfz",
+        "mdp": "admin",
+        "name": "",
+        "prenom": "",
+        "naissance": ""
+    }
+]

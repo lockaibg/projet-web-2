@@ -91,6 +91,33 @@
     </script>
 </head>
 <body>
+    <!--menu de haut de page-->
+    <header>
+        <ul>
+            <li><a href="index.php">Navigation</a></li>
+            <li><a href="liked.php">Recettes</a><img src="Photos/heartFull.png" alt="coeur rouge"></li>
+            <li><form><!--à faire--></form></li>
+            <li><ul><li><?php
+            
+                if(isset($_SESSION["login"])) { 
+                    echo $_SESSION["login"];
+                    ?>
+                    </li>
+                    <li>
+                        <form action="profil.php">
+                            <input type="submit" value="Profil">
+                        </form>
+                    </li>
+                    <li>
+                        <form action="connexion.php">
+                            <input type="submit" value="Se connecter">
+                        </form>
+                    </li>
+                    <?php
+                }
+            ?></ul></li>
+        </ul>
+    </header>
     <!--afficher le fil d'ariane si il existe-->
     <?php 
         if ($fil != "") {
@@ -153,3 +180,4 @@
         ?>
     </div>
 </body>
+</html>
