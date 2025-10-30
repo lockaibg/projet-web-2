@@ -6,7 +6,21 @@
         "prenom": "",
         "naissance": "",
         "liked": [
-            "Sangria sans alcool"
+            "Cocktail de fruits",
+            "Cocktail de jus de fruits pour les enfants"
+        ]
+    },
+    {
+        "login": "zegfq",
+        "mdp": "qaz",
+        "sexe": "f",
+        "name": "",
+        "prenom": "",
+        "naissance": "",
+        "liked": [
+            "Sangria sans alcool",
+            "Cocktail aux framboise",
+            "Cocktail tropical délicieux"
         ]
     }
 ]

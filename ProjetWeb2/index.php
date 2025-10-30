@@ -89,18 +89,39 @@
             });
             //script pour ajouter un cocktail liké
             document.querySelectorAll(".heartLess").forEach(heart => {
-            heart.addEventListener("click", (event) => {
-                const id = event.currentTarget.id;
-                fetch(`ajoutLike.php?cocktail=${encodeURIComponent(id)}`, {
-                method: "GET",
-                cache: "no-store"
-                })
-                .then(response => response.text()) // <-- on lit le résultat texte
-                .then(result => {
-                    console.log("Réponse du serveur :", result);
-                })
-                .catch(error => console.error("Erreur :", error));
+                heart.addEventListener("click", (event) => {
+                    const id = event.currentTarget.id;
+                    event.currentTarget.src = "Photos/heartFull.png";
+                    event.currentTarget.class = "heartFull";
+                    event.currentTarget.alt = "coeur rouge";
+                    fetch(`ajoutLike.php?cocktail=${encodeURIComponent(id)}`, {
+                    method: "GET",
+                    cache: "no-store"
+                    })
+                    .then(response => response.text())
+                    .then(result => {
+                        console.log("Réponse du serveur :", result);
+                    })
+                    .catch(error => console.error("Erreur :", error));
+                });
             });
+            //script pour retirer le like
+            document.querySelectorAll(".heartFull").forEach(heart => {
+                heart.addEventListener("click", (event) => {
+                    const id = event.currentTarget.id;
+                    event.currentTarget.src = "Photos/heartLess.png";
+                    event.currentTarget.class = "heartLess";
+                    event.currentTarget.alt = "coeur vide";
+                    fetch(`retirerLike.php?cocktail=${encodeURIComponent(id)}`, {
+                    method: "GET",
+                    cache: "no-store"
+                    })
+                    .then(response => response.text())
+                    .then(result => {
+                        console.log("Réponse du serveur :", result);
+                    })
+                    .catch(error => console.error("Erreur :", error));
+                });
             });
         }
     </script>
@@ -168,7 +189,13 @@
     <!--afficher le fil d'ariane si il existe-->
     <?php 
         if ($fil != "") {
-            ?><div id="filAriane"><?php echo $fil?></div><?php
+            ?><div id="filAriane"><?php 
+                foreach($filArray as $fils) {
+                    ?>
+                        <a href="index.php?selection=<?php echo $fils;?>"><?php echo $fils;?></a>
+                    <?php
+                }
+            ?></div><?php
         }
     ?>
     <!--Séction contenant la navigation-->
@@ -222,9 +249,29 @@
                         ?></ul><?php
                     }
                 }
-                ?>
-                <img src="Photos/heartLess.png" alt="coeur vide" height="20" class="heartLess" id="<?php echo $recette;?>">
-            </div><?php
+                //si l'utilisateur est connecté passer par le fichier json pour savoir si le cocktail est liké ou pas
+                $arrayLiked;
+                if(isset($_SESSION["login"])) {
+                    $json = file_get_contents("user.json");
+                    $data = json_decode($json, true);
+                    foreach($data as $indice => $user) {
+                        if($user["login"] === $_SESSION["login"]) {
+                            $arrayLiked = $user["liked"];
+                            break;
+                        }
+                    }
+                //si l'utilisateur est déconnecter utiliser la varriable de session "liked"
+                } else if(isset($_SESSION["liked"])) {
+                    $arrayLiked = $_SESSION["liked"];
+                } else {
+                    $arrayLiked = array();
+                }
+                if(array_search($recette, $arrayLiked) === false) {
+                    ?><img src="Photos/heartLess.png" alt="coeur vide" height="20" class="heartLess" id="<?php echo $recette;?>"><?php
+                } else {
+                    ?><img src="Photos/heartFull.png" alt="coeur rouge" height="20" class="heartFull" id="<?php echo $recette;?>"><?php 
+                }
+            ?></div><?php
             }
         ?>
     </div>

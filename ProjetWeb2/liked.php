@@ -8,8 +8,29 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/> 
-    <title><?php echo $select?></title>
+    <title>Recettes likés</title>
     <link rel="stylesheet" href="../styles.css">
+    <script>
+        window.onload = function () {
+            document.querySelectorAll(".heartFull").forEach(heart => {
+                heart.addEventListener("click", (event) => {
+                    const id = event.currentTarget.id;
+                    event.currentTarget.src = "Photos/heartLess.png";
+                    event.currentTarget.class = "heartLess";
+                    event.currentTarget.alt = "coeur vide";
+                    fetch(`retirerLike.php?cocktail=${encodeURIComponent(id)}`, {
+                    method: "GET",
+                    cache: "no-store"
+                    })
+                    .then(response => response.text())
+                    .then(result => {
+                        console.log("Réponse du serveur :", result);
+                    })
+                    .catch(error => console.error("Erreur :", error));
+                });
+            });
+        }
+    </script>
 </head>
 <body>
     <!--menu de haut de page-->
@@ -114,7 +135,7 @@
                 }
             }
             ?>
-            <img src="Photos/heartLess.png" alt="coeur vide" height="20" class="heartLess" id="<?php echo $recette;?>">
+            <img src="Photos/heartFull.png" alt="coeur entié" height="20" class="heartFull" id="<?php echo $recette;?>">
         </div><?php
         }   
     ?></div>
