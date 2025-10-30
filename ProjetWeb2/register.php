@@ -12,6 +12,7 @@
         if(!$loginErreur) {
             $fichier = "user.json";
             $nouveau = $_POST;
+            $nouveau['liked'] = array();
             $tab = json_decode(file_get_contents($fichier), true);
             $tab[] = $nouveau;
             file_put_contents($fichier, json_encode($tab, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));

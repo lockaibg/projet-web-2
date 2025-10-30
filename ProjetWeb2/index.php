@@ -87,6 +87,21 @@
                     window.location.href = lien.href;
                 });
             });
+            //script pour ajouter un cocktail liké
+            document.querySelectorAll(".heartLess").forEach(heart => {
+            heart.addEventListener("click", (event) => {
+                const id = event.currentTarget.id;
+                fetch(`ajoutLike.php?cocktail=${encodeURIComponent(id)}`, {
+                method: "GET",
+                cache: "no-store"
+                })
+                .then(response => response.text()) // <-- on lit le résultat texte
+                .then(result => {
+                    console.log("Réponse du serveur :", result);
+                })
+                .catch(error => console.error("Erreur :", error));
+            });
+            });
         }
     </script>
 </head>
@@ -95,11 +110,11 @@
     <header>
         <ul>
             <li><a href="index.php">Navigation</a></li>
-            <li><a href="liked.php">Recettes</a><img src="Photos/heartFull.png" alt="coeur rouge"></li>
+            <li><a href="liked.php">Recettes</a><img src="Photos/heartFull.png" alt="coeur rouge" height="20"></li>
             <li><form><!--à faire--></form></li>
-            <li><ul><li><?php
-            
+            <li><ul><?php
                 if(isset($_SESSION["login"])) { 
+                    ?><li><?php
                     echo $_SESSION["login"];
                     ?>
                     </li>
@@ -109,8 +124,40 @@
                         </form>
                     </li>
                     <li>
-                        <form action="connexion.php">
-                            <input type="submit" value="Se connecter">
+                        <form action="deconnexion.php">
+                            <input type="submit" value="Se déconnecter">
+                        </form>
+                    </li>
+                    <?php
+                } else {
+                    ?>
+                    <li>
+                        <form method="POST" action="connexion.php?page=index">
+                            <label for="login">Login</label>
+                            <input type="text" id="login" name="login" required><br><br>
+
+                            <label for="mdp">Mot de passe :</label>
+                            <input type="password" id="mdp" name="mdp" required><br><br>
+
+                            <input type="submit" value="Connexion">
+                        </form>
+                    </li>
+                    <?php
+                        if(isset($_GET["err"])) {
+                            if($_GET["err"] == "psw") {
+                                ?>
+                                    <li style="color: red;">mot de passe incorrecte</li>
+                                <?php
+                            } else if($_GET["err"] == "login") {
+                                ?>
+                                    <li style="color: red;">login introuvable</li>
+                                <?php
+                            }
+                        }
+                    ?>
+                    <li>
+                        <form action="register.php">
+                            <input type="submit" value="S'inscrire">
                         </form>
                     </li>
                     <?php
@@ -175,7 +222,9 @@
                         ?></ul><?php
                     }
                 }
-                ?></div><?php
+                ?>
+                <img src="Photos/heartLess.png" alt="coeur vide" height="20" class="heartLess" id="<?php echo $recette;?>">
+            </div><?php
             }
         ?>
     </div>
