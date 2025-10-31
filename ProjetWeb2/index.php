@@ -67,7 +67,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/> 
-    <title><?php echo $select?></title>
+    <title>Navigation : <?php echo $select?></title>
     <link rel="stylesheet" href="../styles.css">    
     <script>
         //script utilisé pour update la varriable de session visant a garder en mémoire le fil d'ariane
@@ -199,24 +199,26 @@
         }
     ?>
     <!--Séction contenant la navigation-->
-    <div id="selection" style="border: solid;">
-        <ul>
+    
         <?php
             foreach($Hierarchie as $element => $fils) { 
                 if($element === $select){ //recherche de l'element
                     foreach($fils as $cats => $liste){
                         if($cats === "sous-categorie") {
+                            ?><div id="selection" style="border: solid;">
+                            <ul><?php
                             foreach($liste as $elem) { //affichage de tout les fils de l'element trouvé
                             ?> 
                                 <li><a id ="<?php echo $elem?>" href="index.php?selection=<?php echo $elem?>"class="elemClickable"><?php echo $elem?></a></li>                                                        
                             <?php
                             }
+                            ?></ul><?php
                         }
                     }
                 }
             }
         ?>
-        </ul>
+        
 
     </div>
     <!--séction contenant les recettes synthétiques-->
