@@ -62,6 +62,9 @@
         return $retour;
     }
 
+    function recupRecherche($chaine){
+        
+    }
 
 ?>
 <!DOCTYPE html>
@@ -134,9 +137,10 @@
                     headers: { "Content-Type": "application/x-www-form-urlencoded"},
                     body: "texte=" + encodeURIComponent(texte)
                 })
-                .then(res => res.text())
+                .then(res => res.json())
                 .then(data => {
                     console.log("Traitement de recherche :", data)
+                    data.forEach(mot => console.log(mot));
                 })
                 .catch(error => console.error("Erreur :", error));
         }
