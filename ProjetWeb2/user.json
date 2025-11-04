@@ -33,5 +33,13 @@
         "prenom": "L'archevêque fz",
         "naissance": "",
         "liked": []
+    },
+    {
+        "login": "qzf",
+        "mdp": "admin",
+        "name": "",
+        "prenom": "",
+        "naissance": "",
+        "liked": []
     }
 ]

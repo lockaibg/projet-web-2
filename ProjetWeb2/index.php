@@ -152,7 +152,13 @@
         <ul>
             <li><a href="index.php">Navigation</a></li>
             <li><a href="liked.php">Recettes</a><img src="Photos/heartFull.png" alt="coeur rouge" height="20"></li>
-            <li><form><!--à faire--></form></li>
+            <li><!--recherche via syntaxe-->
+                <form id="recherche" action="resultat.php" method="POST">
+                    <label>Recherche</label>
+                    <input type="text" id="rechercheText"/>
+                    <input type="submit" value = "Valider">
+                </form>
+            </li>
             <li><ul><?php
                 if(isset($_SESSION["login"])) { 
                     ?><li><?php
@@ -206,13 +212,6 @@
             ?></ul></li>
         </ul>
     </header>
-    
-    <!--recherche via syntaxe-->
-    <div id="recherche">
-        <label>Recherche</label>
-        <input type="text" id="rechercheText"/>
-        <button onClick="recupererRecherche()">Valider</button>
-    </div>
 
     <!--afficher le fil d'ariane si il existe-->
     <?php 
