@@ -61,6 +61,11 @@
         }
         return $retour;
     }
+
+    function recupRecherche($chaine){
+        
+    }
+
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -124,6 +129,21 @@
                 });
             });
         }
+
+        function recupererRecherche() {
+            let texte = document.getElementById("rechercheText").value;
+                fetch("recherche.php", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded"},
+                    body: "texte=" + encodeURIComponent(texte)
+                })
+                .then(res => res.json())
+                .then(data => {
+                    console.log("Traitement de recherche :", data)
+                    data.forEach(mot => console.log(mot));
+                })
+                .catch(error => console.error("Erreur :", error));
+        }
     </script>
 </head>
 <body>
@@ -186,6 +206,14 @@
             ?></ul></li>
         </ul>
     </header>
+    
+    <!--recherche via syntaxe-->
+    <div id="recherche">
+        <label>Recherche</label>
+        <input type="text" id="rechercheText"/>
+        <button onClick="recupererRecherche()">Valider</button>
+    </div>
+
     <!--afficher le fil d'ariane si il existe-->
     <?php 
         if ($fil != "") {
