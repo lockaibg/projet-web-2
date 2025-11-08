@@ -153,10 +153,10 @@
             <li><a href="index.php">Navigation</a></li>
             <li><a href="liked.php">Recettes</a><img src="Photos/heartFull.png" alt="coeur rouge" height="20"></li>
             <li><!--recherche via syntaxe-->
-                <form id="recherche" action="resultat.php" method="POST">
+                <form id="recherche" action="recherche.php" method="POST">
                     <label>Recherche</label>
-                    <input type="text" id="rechercheText"/>
-                    <input type="submit" value = "Valider">
+                    <input type="text" id="rechercheText" name="rechercheText" />
+                    <input type="submit" value="Valider">
                 </form>
             </li>
             <li><ul><?php
