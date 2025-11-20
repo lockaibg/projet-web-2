@@ -108,7 +108,7 @@ if (isset($_POST['rechercheText'])) {
     // Sépare en utilisant les espaces
     $mots = explode(' ', $texte);
     $mots = preg_split('/\s+/', trim($texte));
-    print_r($mots); echo "<br/>";
+
     foreach ($mots as $mot) {
         if ($mot[0] === '+') {
             $plus[] = substr($mot, 1);
@@ -158,7 +158,7 @@ if (isset($_POST['rechercheText'])) {
     }
 
     foreach ($sansSigne as $mot) {
-        print_r($mot); echo "<br/>";
+
         if (ingredientExiste($mot)) {
             $plusAffichage[] = $mot;
             $desc = trouverToutDescendant($mot, $Hierarchie);
@@ -174,7 +174,6 @@ if (isset($_POST['rechercheText'])) {
 
     $resultats = array_unique($resultats);
     $recettesFinales = $resultats;
-    //echo "recettesFinales "; print_r($recettesFinales); echo "<br/>";
     
     echo "Liste éléments souhaités : "; 
     foreach ($plusAffichage as $affichage) {
