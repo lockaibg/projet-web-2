@@ -61,11 +61,10 @@
         }
         return $retour;
     }
-
-    function recupRecherche($chaine){
-        
-    }
-
+    $testee = [];
+    echo "salut ca fart </br>";
+    print_r(trouverRecettes("caca", $testee));
+    print_r($testee);
 ?>
 <!DOCTYPE html>
 <html lang="fr">

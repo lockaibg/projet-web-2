@@ -13,7 +13,7 @@ if (isset($_POST['rechercheText'])) {
 
 
     function ingredientExiste($ingredient) {
-
+        global $Recettes, $Hierarchie;
         // --- Vérifie dans $Recettes (dans les index)
         foreach ($Recettes as $recette) {
             foreach ($recette['index'] as $motCle) {
@@ -77,13 +77,28 @@ if (isset($_POST['rechercheText'])) {
         return $out;
     }
 
+    $plus = [];
+    $moins = [];
+    $sansSigne = [];
+    $nonReconnu = [];
+    $texte = str_replace(['“','”','«','»'], '"', $texte);
     if (preg_match('/^"([^"]+)"\s*(.*)$/', $texte, $match)) {
         $premierMot = $match[1];
         $reste = trim($match[2]);
-        $plus = [];
-        $moins = [];
-        $nonReconnu = [];
 
+        $ingredientsMotExact = trouverToutDescendant($premierMot, $Hierarchie);
+
+        $resultats = [];
+        foreach ($ingredientsMotExact as $ing) {
+            $resultats = array_merge($resultats, trouverRecettes($ing, $Recettes));
+        }
+
+        if (empty($resultats)) {
+            $nonReconnu[] = $premierMot;
+        } else {
+            $plus[] = $premierMot;
+        }
+        
         preg_match_all('/"([^"]+)"|([^\s]+)/', $reste, $matches);
 
         foreach ($matches[0] as $mot) {
@@ -92,18 +107,16 @@ if (isset($_POST['rechercheText'])) {
             } elseif ($mot[0] === '-') {
                 $moins[] = substr($mot, 1);
             } else {
-                $nonReconnu[] = $mot;
+                $sansSigne[] = $mot;
             }
-        }
-            
-        $ingredientsMotExact = trouverToutDescendant($premierMot, $Hierarchie);
-
-        $resultats = [];
-        foreach ($ingredientsMotExact as $ing) {
-            $resultats = array_merge($resultats, trouverRecettes($ing, $Recettes));
         }
 
         foreach ($plus as $oblig) {
+            if (!ingredientExiste($oblig)) {
+                $nonReconnu[] = $oblig;
+                continue;
+            }
+
             $desc = trouverToutDescendant($oblig, $Hierarchie);
 
             $tous = [];
@@ -111,11 +124,15 @@ if (isset($_POST['rechercheText'])) {
                 $tous = array_merge($tous, trouverRecettes($d, $Recettes));
             }
 
-            // garder seulement les recettes présentes dans les 2 listes
             $resultats = array_intersect($resultats, $tous);
         }
 
         foreach ($moins as $interdit) {
+            if (!ingredientExiste($interdit)) {
+                $nonReconnu[] = $interdit;
+                continue;
+            }
+
             $desc = trouverToutDescendant($interdit, $Hierarchie);
 
             $aExclure = [];
@@ -123,20 +140,52 @@ if (isset($_POST['rechercheText'])) {
                 $aExclure = array_merge($aExclure, trouverRecettes($d, $Recettes));
             }
 
-            // retirer les recettes interdites
             $resultats = array_diff($resultats, $aExclure);
+        }
+
+        foreach ($sansSigne as $mot) {
+            if (ingredientExiste($mot)) {
+                $plus[] = $mot;
+                $desc = trouverToutDescendant($mot, $Hierarchie);
+                $tous = [];
+                foreach ($desc as $d) {
+                    $tous = array_merge($tous, trouverRecettes($d, $Recettes));
+                }
+                $resultats = array_intersect($resultats, $tous);
+            } else {
+                $nonReconnu[] = $mot;
+            }
         }
 
         $resultats = array_unique($resultats);
         $recettesFinales = $resultats;
     } else {
-        echo "Erreur de syntaxe : il manque des guillemets.";
+        echo "Erreur de syntaxe : il manque des guillemets. <br/>";
+
+        $reste = trim($texte);
+        preg_match_all('/"([^"]+)"|([^\s]+)/', $reste, $matches);
+
+        foreach ($matches[0] as $mot) {
+            $nonReconnu[] = $mot;
+        }
         $recettesFinales = [];
     }
 
-    echo "Liste éléments souhaités : "; print_r($plus); echo "</br>";   
-    echo "Liste éléments non souhaités : "; print_r($moins); echo "</br>";
-    echo "Liste éléments non reconnus : "; print_r($nonReconnu); echo "</br>";
+    echo "Liste éléments souhaités : "; 
+    foreach ($plus as $affichage) {
+        echo htmlspecialchars($affichage). ", ";
+    } 
+    echo "</br>";   
+    echo "Liste éléments non souhaités : ";
+    foreach ($moins as $affichage) {
+        echo htmlspecialchars($affichage). ", ";
+    } 
+    echo "</br>";
+    echo "Liste éléments non reconnus : ";
+    foreach ($nonReconnu as $affichage) {
+        echo htmlspecialchars($affichage). ", ";
+    } 
+    echo "</br>";
 }
 ?>
 <!DOCTYPE html>
