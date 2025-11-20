@@ -81,10 +81,10 @@ if (isset($_POST['rechercheText'])) {
     $moins = [];
     $sansSigne = [];
     $nonReconnu = [];
+    $recettesFinales = [];
     $texte = str_replace(['“','”','«','»'], '"', $texte);
     if (preg_match('/^"([^"]+)"\s*(.*)$/', $texte, $match)) {
         $premierMot = $match[1];
-        $reste = trim($match[2]);
 
         $ingredientsMotExact = trouverToutDescendant($premierMot, $Hierarchie);
 
@@ -99,78 +99,75 @@ if (isset($_POST['rechercheText'])) {
             $plus[] = $premierMot;
         }
         
-        preg_match_all('/"([^"]+)"|([^\s]+)/', $reste, $matches);
+    } else {
+        echo "Erreur de syntaxe : il manque des guillemets. <br/>";
+    }
 
-        foreach ($matches[0] as $mot) {
-            if ($mot[0] === '+') {
-                $plus[] = substr($mot, 1);
-            } elseif ($mot[0] === '-') {
-                $moins[] = substr($mot, 1);
-            } else {
-                $sansSigne[] = $mot;
-            }
+    preg_match('/^"([^"]+)"\s*(.*)$/', $texte, $match);
+    $reste = trim($match[2]);
+    preg_match_all('/"([^"]+)"|([^\s]+)/', $reste, $matches);
+    foreach ($matches[0] as $mot) {
+        if ($mot[0] === '+') {
+            $plus[] = substr($mot, 1);
+        } elseif ($mot[0] === '-') {
+            $moins[] = substr($mot, 1);
+        } else {
+            $sansSigne[] = $mot;
+        }
+    }
+
+    foreach ($plus as $oblig) {
+        if (!ingredientExiste($oblig)) {
+            $nonReconnu[] = $oblig;
+            continue;
         }
 
-        foreach ($plus as $oblig) {
-            if (!ingredientExiste($oblig)) {
-                $nonReconnu[] = $oblig;
-                continue;
-            }
+        $desc = trouverToutDescendant($oblig, $Hierarchie);
 
-            $desc = trouverToutDescendant($oblig, $Hierarchie);
+        $tous = [];
+        foreach ($desc as $d) {
+            $tous = array_merge($tous, trouverRecettes($d, $Recettes));
+        }
 
+        $resultats = array_intersect($resultats, $tous);
+    }
+
+    foreach ($moins as $interdit) {
+        if (!ingredientExiste($interdit)) {
+            $nonReconnu[] = $interdit;
+            continue;
+        }
+
+        $desc = trouverToutDescendant($interdit, $Hierarchie);
+
+        $aExclure = [];
+        foreach ($desc as $d) {
+            $aExclure = array_merge($aExclure, trouverRecettes($d, $Recettes));
+        }
+
+        $resultats = array_diff($resultats, $aExclure);
+    }
+
+    foreach ($sansSigne as $mot) {
+        if (ingredientExiste($mot)) {
+            $plus[] = $mot;
+            $desc = trouverToutDescendant($mot, $Hierarchie);
             $tous = [];
             foreach ($desc as $d) {
                 $tous = array_merge($tous, trouverRecettes($d, $Recettes));
             }
-
             $resultats = array_intersect($resultats, $tous);
-        }
-
-        foreach ($moins as $interdit) {
-            if (!ingredientExiste($interdit)) {
-                $nonReconnu[] = $interdit;
-                continue;
-            }
-
-            $desc = trouverToutDescendant($interdit, $Hierarchie);
-
-            $aExclure = [];
-            foreach ($desc as $d) {
-                $aExclure = array_merge($aExclure, trouverRecettes($d, $Recettes));
-            }
-
-            $resultats = array_diff($resultats, $aExclure);
-        }
-
-        foreach ($sansSigne as $mot) {
-            if (ingredientExiste($mot)) {
-                $plus[] = $mot;
-                $desc = trouverToutDescendant($mot, $Hierarchie);
-                $tous = [];
-                foreach ($desc as $d) {
-                    $tous = array_merge($tous, trouverRecettes($d, $Recettes));
-                }
-                $resultats = array_intersect($resultats, $tous);
-            } else {
-                $nonReconnu[] = $mot;
-            }
-        }
-
-        $resultats = array_unique($resultats);
-        $recettesFinales = $resultats;
-    } else {
-        echo "Erreur de syntaxe : il manque des guillemets. <br/>";
-
-        $reste = trim($texte);
-        preg_match_all('/"([^"]+)"|([^\s]+)/', $reste, $matches);
-
-        foreach ($matches[0] as $mot) {
+        } else {
             $nonReconnu[] = $mot;
         }
-        $recettesFinales = [];
+
+        print_r($tous); echo "<br/>";
     }
 
+    $resultats = array_unique($resultats);
+    $recettesFinales = $resultats;
+    echo "recettesFinales "; print_r($recettesFinales); echo "<br/>";
+    
     echo "Liste éléments souhaités : "; 
     foreach ($plus as $affichage) {
         echo htmlspecialchars($affichage). ", ";
@@ -187,6 +184,7 @@ if (isset($_POST['rechercheText'])) {
     } 
     echo "</br>";
 }
+
 ?>
 <!DOCTYPE html>
 <html>
