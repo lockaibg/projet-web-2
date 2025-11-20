@@ -46,7 +46,24 @@ if (isset($_POST['rechercheText'])) {
                 }
             }
         }
+        
+        // Vérifie si l'ingrédient apparaît partiellement dans les mots-clés
+        foreach ($Recettes as $recette) {
+            foreach ($recette['index'] as $motCle) {
+                if (stripos($motCle, $ingredient) !== false) {
+                    return true;
+                }
+            }
+        }
+        foreach ($Hierarchie as $categorie => $infos) {
+            if (stripos($categorie, $ingredient) !== false) return true;
 
+            if (isset($infos['sous-categorie'])) {
+                foreach ($infos['sous-categorie'] as $sous) {
+                    if (stripos($sous, $ingredient) !== false) return true;
+                }
+            }
+        }
         // Rien trouvé
         return false;
     }
@@ -57,6 +74,10 @@ if (isset($_POST['rechercheText'])) {
         foreach ($recettes as $recette) {
             foreach ($recette['index'] as $ing) {
                 if (strcasecmp($ing, $ingredient) === 0) {
+                    $retour[] = $recette['titre'];
+                    break;
+                }
+                if (stripos($ing, $ingredient) !== false) {
                     $retour[] = $recette['titre'];
                     break;
                 }
@@ -123,6 +144,8 @@ if (isset($_POST['rechercheText'])) {
             $resultats[] = $recette['titre'];
         }
     }
+
+    
     foreach ($plus as $oblig) {
 
         if (!ingredientExiste($oblig)) {
@@ -158,7 +181,6 @@ if (isset($_POST['rechercheText'])) {
     }
 
     foreach ($sansSigne as $mot) {
-
         if (ingredientExiste($mot)) {
             $plusAffichage[] = $mot;
             $desc = trouverToutDescendant($mot, $Hierarchie);
