@@ -78,14 +78,16 @@ if (isset($_POST['rechercheText'])) {
     }
 
     $plus = [];
+    $plusAffichage = [];
     $moins = [];
+    $moinsAffichage = [];
     $sansSigne = [];
     $nonReconnu = [];
     $recettesFinales = [];
     $texte = str_replace(['“','”','«','»'], '"', $texte);
     if (preg_match('/^"([^"]+)"\s*(.*)$/', $texte, $match)) {
         $premierMot = $match[1];
-
+        $texte = trim($match[2]);
         $ingredientsMotExact = trouverToutDescendant($premierMot, $Hierarchie);
 
         $resultats = [];
@@ -103,10 +105,11 @@ if (isset($_POST['rechercheText'])) {
         echo "Erreur de syntaxe : il manque des guillemets. <br/>";
     }
 
-    preg_match('/^"([^"]+)"\s*(.*)$/', $texte, $match);
-    $reste = trim($match[2]);
-    preg_match_all('/"([^"]+)"|([^\s]+)/', $reste, $matches);
-    foreach ($matches[0] as $mot) {
+    // Sépare en utilisant les espaces
+    $mots = explode(' ', $texte);
+    $mots = preg_split('/\s+/', trim($texte));
+    print_r($mots); echo "<br/>";
+    foreach ($mots as $mot) {
         if ($mot[0] === '+') {
             $plus[] = substr($mot, 1);
         } elseif ($mot[0] === '-') {
@@ -115,13 +118,18 @@ if (isset($_POST['rechercheText'])) {
             $sansSigne[] = $mot;
         }
     }
-
+    if (empty($resultats)) {
+        foreach ($Recettes as $recette) {
+            $resultats[] = $recette['titre'];
+        }
+    }
     foreach ($plus as $oblig) {
+
         if (!ingredientExiste($oblig)) {
             $nonReconnu[] = $oblig;
             continue;
         }
-
+        $plusAffichage[] = $oblig;
         $desc = trouverToutDescendant($oblig, $Hierarchie);
 
         $tous = [];
@@ -133,11 +141,12 @@ if (isset($_POST['rechercheText'])) {
     }
 
     foreach ($moins as $interdit) {
+        
         if (!ingredientExiste($interdit)) {
             $nonReconnu[] = $interdit;
             continue;
         }
-
+        $moinsAffichage[] = $oblig;
         $desc = trouverToutDescendant($interdit, $Hierarchie);
 
         $aExclure = [];
@@ -149,8 +158,9 @@ if (isset($_POST['rechercheText'])) {
     }
 
     foreach ($sansSigne as $mot) {
+        print_r($mot); echo "<br/>";
         if (ingredientExiste($mot)) {
-            $plus[] = $mot;
+            $plusAffichage[] = $mot;
             $desc = trouverToutDescendant($mot, $Hierarchie);
             $tous = [];
             foreach ($desc as $d) {
@@ -160,21 +170,19 @@ if (isset($_POST['rechercheText'])) {
         } else {
             $nonReconnu[] = $mot;
         }
-
-        print_r($tous); echo "<br/>";
     }
 
     $resultats = array_unique($resultats);
     $recettesFinales = $resultats;
-    echo "recettesFinales "; print_r($recettesFinales); echo "<br/>";
+    //echo "recettesFinales "; print_r($recettesFinales); echo "<br/>";
     
     echo "Liste éléments souhaités : "; 
-    foreach ($plus as $affichage) {
+    foreach ($plusAffichage as $affichage) {
         echo htmlspecialchars($affichage). ", ";
     } 
     echo "</br>";   
     echo "Liste éléments non souhaités : ";
-    foreach ($moins as $affichage) {
+    foreach ($moinsAffichage as $affichage) {
         echo htmlspecialchars($affichage). ", ";
     } 
     echo "</br>";
