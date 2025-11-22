@@ -145,7 +145,6 @@ if (isset($_POST['rechercheText'])) {
         }
     }
 
-    
     foreach ($plus as $oblig) {
 
         if (!ingredientExiste($oblig)) {
@@ -164,12 +163,11 @@ if (isset($_POST['rechercheText'])) {
     }
 
     foreach ($moins as $interdit) {
-        
         if (!ingredientExiste($interdit)) {
             $nonReconnu[] = $interdit;
             continue;
         }
-        $moinsAffichage[] = $oblig;
+        $moinsAffichage[] = $interdit;
         $desc = trouverToutDescendant($interdit, $Hierarchie);
 
         $aExclure = [];
