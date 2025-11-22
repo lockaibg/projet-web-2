@@ -143,6 +143,17 @@
                 })
                 .catch(error => console.error("Erreur :", error));
         }
+
+        function validerRecherche() {
+                const texte = document.getElementById('rechercheText').value;
+                const matches = texte.match(/"/g);
+                const nombreDeQuotes = matches ? matches.length : 0;
+                if (nombreDeQuotes % 2 !== 0) {
+                    alert("Problème de syntaxe dans votre requête : nombre impair de double-quotes");
+                    return false;
+                }
+                return true;
+            }
     </script>
 </head>
 <body>
@@ -152,7 +163,7 @@
             <li><a href="index.php">Navigation</a></li>
             <li><a href="liked.php">Recettes</a><img src="Photos/heartFull.png" alt="coeur rouge" height="20"></li>
             <li><!--recherche via syntaxe-->
-                <form id="recherche" action="recherche.php" method="POST">
+                <form id="recherche" action="recherche.php" method="POST" onsubmit="return validerRecherche();">
                     <label>Recherche</label>
                     <input type="text" id="rechercheText" name="rechercheText" />
                     <input type="submit" value="Valider">
