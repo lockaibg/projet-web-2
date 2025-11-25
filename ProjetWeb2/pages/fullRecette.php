@@ -4,7 +4,8 @@
     if(isset($_POST["elem"])) {
         $cocktail = $_POST["elem"];
     } else {
-
+        echo "prblm";
+        exit(0);
     }
 ?>
 
@@ -81,8 +82,9 @@
             ?></ul></li>
         </ul>
     </header>
-
+        <p id="<?php echo $cocktail;?>">
     <?php
+        echo $cocktail;
         foreach($Recettes as $indice => $cocktails) {
             if($cocktails['titre'] === $cocktail) {
                 ?>

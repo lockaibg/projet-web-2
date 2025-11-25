@@ -102,7 +102,7 @@
             $arrayLiked = array();
         }
         foreach($arrayLiked as $recette) {?>
-            <div id ="<?php echo convert_to_underscore($recette);;?>" style="border: solid;">
+            <div id ="<?php echo convert_to_underscore($recette);?>" style="border: solid;">
                 <?php echo $recette;?> 
             <?php
             //afficher la photo si elle existe

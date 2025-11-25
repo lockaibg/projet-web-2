@@ -19,8 +19,10 @@ function postToPage(url, data = {}) {
 window.addEventListener("DOMContentLoaded", () => { 
     document.querySelectorAll(".cocktail").forEach(cocktail => {
         cocktail.addEventListener("click", (e) => {
+            const id = convert_tospace(e.currentTarget.id);
+            console.log(id);
             postToPage("fullRecette.php", {
-                elem: convert_tospace(e.currentTarget.id)
+                elem: id
             });
         });
     });

@@ -4,11 +4,11 @@ window.addEventListener("DOMContentLoaded", () => {
         
         heart.addEventListener("click", (event) => {
             event.stopPropagation();
-            const id = event.currentTarget.id;
-            event.currentTarget.src = "Photos/heartFull.png";
+            const id = convert_tospace(event.currentTarget.id);
+            event.currentTarget.src = "../Photos/heartFull.png";
             event.currentTarget.className = "heartFull";
             event.currentTarget.alt = "coeur rouge";
-            fetch(`php/ajoutLike.php?cocktail=${encodeURIComponent(id)}`, {
+            fetch(`../php/ajoutLike.php?cocktail=${encodeURIComponent(id)}`, {
             method: "GET",
             cache: "no-store"
             })
@@ -23,11 +23,11 @@ window.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".heartFull").forEach(heart => {
         heart.addEventListener("click", (event) => {
             event.stopPropagation();
-            const id = event.currentTarget.id;
-            event.currentTarget.src = "Photos/heartLess.png";
+            const id = convert_tospace(event.currentTarget.id);
+            event.currentTarget.src = "../Photos/heartLess.png";
             event.currentTarget.className = "heartLess";
             event.currentTarget.alt = "coeur vide";
-            fetch(`php/retirerLike.php?cocktail=${encodeURIComponent(id)}`, {
+            fetch(`../php/retirerLike.php?cocktail=${encodeURIComponent(id)}`, {
             method: "GET",
             cache: "no-store"
             })
