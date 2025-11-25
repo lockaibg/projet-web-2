@@ -3,10 +3,10 @@ window.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".heartLess").forEach(heart => {
         
         heart.addEventListener("click", (event) => {
-            heart.stopPropagation();
+            event.stopPropagation();
             const id = event.currentTarget.id;
             event.currentTarget.src = "Photos/heartFull.png";
-            event.currentTarget.class = "heartFull";
+            event.currentTarget.className = "heartFull";
             event.currentTarget.alt = "coeur rouge";
             fetch(`ajoutLike.php?cocktail=${encodeURIComponent(id)}`, {
             method: "GET",
@@ -22,10 +22,10 @@ window.addEventListener("DOMContentLoaded", () => {
     //script pour retirer le like
     document.querySelectorAll(".heartFull").forEach(heart => {
         heart.addEventListener("click", (event) => {
-            heart.stopPropagation();
+            event.stopPropagation();
             const id = event.currentTarget.id;
             event.currentTarget.src = "Photos/heartLess.png";
-            event.currentTarget.class = "heartLess";
+            event.currentTarget.className = "heartLess";
             event.currentTarget.alt = "coeur vide";
             fetch(`retirerLike.php?cocktail=${encodeURIComponent(id)}`, {
             method: "GET",

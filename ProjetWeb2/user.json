@@ -42,5 +42,14 @@
         "prenom": "",
         "naissance": "",
         "liked": []
+    },
+    {
+        "login": "caca",
+        "mdp": "pipi",
+        "sexe": "h",
+        "name": "tlan",
+        "prenom": "lan",
+        "naissance": "2005-02-07",
+        "liked": []
     }
 ]
