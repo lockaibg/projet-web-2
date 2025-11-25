@@ -228,6 +228,7 @@
                 $recettes = array_merge($recettes, trouverRecettes($ingredient, $Recettes));
             }
             foreach($recettes as $recette) {?>
+<<<<<<< HEAD:ProjetWeb2/pages/index.php
                 <div id ="<?php echo $recette;?>" style="border: solid;" class="cocktail">
                     <?php echo $recette;?> 
                 <?php
@@ -257,15 +258,60 @@
                     foreach($data as $indice => $user) {
                         if($user["login"] === $_SESSION["login"]) {
                             $arrayLiked = $user["liked"];
+=======
+                <div id ="<?php echo $recette . "super";?>">
+                    <div id ="<?php echo $recette;?>" style="border: solid;" class="cocktail">
+                        <?php echo $recette;?> 
+                    <?php
+                    //afficher la photo si elle existe
+                    $textPhoto = "Photos/".str_replace(' ', '_', $recette).".jpg";
+                    if(file_exists($textPhoto)){?>
+                        <img src="<?php echo $textPhoto?>" alt="<?php echo $textPhoto?>" height="200"/>
+                        <?php
+                    } else {
+                        ?><img src="Photos/default.jpg" alt="default for <?php echo $textPhoto?>" height="200"/><?php
+                    }
+                    foreach($Recettes as $recInfos) {
+                        if($recInfos['titre'] === $recette) {
+                            ?><ul><?php
+                            foreach($recInfos['index'] as $ingr) {
+                                echo "<li>".$ingr."</li>";
+                            }
+>>>>>>> 1c7851bed16781ddd1946140c90cd965b1927aff:ProjetWeb2/index.php
                             break;
+                            ?></ul><?php
                         }
                     }
-                //si l'utilisateur est déconnecter utiliser la varriable de session "liked"
-                } else if(isset($_SESSION["liked"])) {
-                    $arrayLiked = $_SESSION["liked"];
-                } else {
-                    $arrayLiked = array();
+                    ?> </div> 
+                    
+                    <div id ="<?php echo $recette . "like";?>">
+                    <?php
+
+                    //si l'utilisateur est connecté passer par le fichier json pour savoir si le cocktail est liké ou pas
+                    $arrayLiked;
+                    if(isset($_SESSION["login"])) {
+                        $json = file_get_contents("user.json");
+                        $data = json_decode($json, true);
+                        foreach($data as $indice => $user) {
+                            if($user["login"] === $_SESSION["login"]) {
+                                $arrayLiked = $user["liked"];
+                                break;
+                            }
+                        }
+                    //si l'utilisateur est déconnecter utiliser la varriable de session "liked"
+                    } else if(isset($_SESSION["liked"])) {
+                        $arrayLiked = $_SESSION["liked"];
+                    } else {
+                        $arrayLiked = array();
+                    }
+                    if(array_search($recette, $arrayLiked) === false) {
+                        ?><img src="Photos/heartLess.png" alt="coeur vide" height="20" class="heartLess" id="<?php echo $recette;?>"><?php
+                    } else {
+                        ?><img src="Photos/heartFull.png" alt="coeur rouge" height="20" class="heartFull" id="<?php echo $recette;?>"><?php 
+                    }
+                ?></div><?php
                 }
+<<<<<<< HEAD:ProjetWeb2/pages/index.php
                 if(array_search($recette, $arrayLiked) === false) {
                     ?><img src="../Photos/heartLess.png" alt="coeur vide" height="20" class="heartLess" id="<?php echo $recette;?>"><?php
                 } else {
@@ -274,6 +320,10 @@
             ?></div><?php
             }
         ?>
+=======
+            ?>
+                </div>
+>>>>>>> 1c7851bed16781ddd1946140c90cd965b1927aff:ProjetWeb2/index.php
     </div>
 </body>
 </html>
