@@ -1,6 +1,11 @@
-<?php
-    session_start();
+<?php 
     include "Donnees.inc.php";
+    session_start();
+    if(isset($_POST["elem"])) {
+        $cocktail = $_POST["elem"];
+    } else {
+
+    }
 ?>
 
 <!DOCTYPE html>
@@ -8,17 +13,21 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/> 
-    <title>Recettes likés</title>
+    <title><?php echo $cocktail?></title>
     <link rel="stylesheet" href="styles.css">
-    <script src="js/dislike.js"></script>
 </head>
 <body>
-    <!--menu de haut de page-->
     <header>
         <ul>
             <li><a href="index.php">Navigation</a></li>
             <li><a href="liked.php">Recettes</a><img src="Photos/heartFull.png" alt="coeur rouge" height="20"></li>
-            <li><form><!--à faire--></form></li>
+            <li><!--recherche via syntaxe-->
+                <form id="recherche" action="recherche.php" method="POST" onsubmit="return validerRecherche();">
+                    <label>Recherche</label>
+                    <input type="text" id="rechercheText" name="rechercheText" />
+                    <input type="submit" value="Valider">
+                </form>
+            </li>
             <li><ul><?php
                 if(isset($_SESSION["login"])) { 
                     ?><li><?php
@@ -39,7 +48,7 @@
                 } else {
                     ?>
                     <li>
-                        <form method="POST" action="connexion.php?page=liked">
+                        <form method="POST" action="connexion.php?page=index">
                             <label for="login">Login</label>
                             <input type="text" id="login" name="login" required><br><br>
 
@@ -72,52 +81,29 @@
             ?></ul></li>
         </ul>
     </header>
-    <!--liste des recettes liké-->
-    <div id="recettes">
+
     <?php
-        //si l'utilisateur est connecté passer par le fichier json
-        $arrayLiked;
-        if(isset($_SESSION["login"])) {
-            $json = file_get_contents("user.json");
-            $data = json_decode($json, true);
-            foreach($data as $indice => $user) {
-                if($user["login"] === $_SESSION["login"]) {
-                    $arrayLiked = $user["liked"];
-                    break;
-                }
-            }
-        //si l'utilisateur est déconnecter utiliser la varriable de session "liked"
-        } else if(isset($_SESSION["liked"])) {
-            $arrayLiked = $_SESSION["liked"];
-        } else {
-            $arrayLiked = array();
-        }
-        foreach($arrayLiked as $recette) {?>
-            <div id ="<?php echo $recette;?>" style="border: solid;">
-                <?php echo $recette;?> 
-            <?php
-            //afficher la photo si elle existe
-            $textPhoto = "Photos/".str_replace(' ', '_', $recette).".jpg";
-            if(file_exists($textPhoto)){?>
-                <img src="<?php echo $textPhoto?>" alt="<?php echo $textPhoto?>" height="200"/>
-                <?php
-            } else {
-                ?><img src="Photos/default.jpg" alt="default for <?php echo $textPhoto?>" height="200"/><?php
-            }
-            foreach($Recettes as $recInfos) {
-                if($recInfos['titre'] === $recette) {
-                    ?><ul><?php
-                    foreach($recInfos['index'] as $ingr) {
-                        echo "<li>".$ingr."</li>";
+        foreach($Recettes as $indice => $cocktails) {
+            if($cocktails['titre'] === $cocktail) {
+                ?>
+                <div id ="recette" style="border: solid;" class="cocktail">
+                    <h1><?php echo $cocktail; ?></h1><?php
+                    //afficher la photo si elle existe
+                    $textPhoto = "Photos/".str_replace(' ', '_', $cocktail).".jpg";
+                    ?>
+                        <h2>Ingrédients :</h2>
+                        <p> <?php echo $cocktails['ingredients'] ?></p>
+                        <h2>Recette :</h2>
+                        <p> <?php echo $cocktails['preparation'] ?></p>
+                    <?php
+                    if(file_exists($textPhoto)){?>
+                        <img src="<?php echo $textPhoto?>" alt="<?php echo $textPhoto?>" height="200"/>
+                        <?php
+                    } else {
+                        ?><img src="Photos/default.jpg" alt="default for <?php echo $textPhoto?>" height="200"/><?php
                     }
-                    break;
-                    ?></ul><?php
-                }
+                ?></div><?php
             }
-            ?>
-            <img src="Photos/heartFull.png" alt="coeur entié" height="20" class="heartFull" id="<?php echo $recette;?>">
-        </div><?php
-        }   
-    ?></div>
+        }
+    ?>
 </body>
-</html>

@@ -62,9 +62,6 @@
         return $retour;
     }
     $testee = [];
-    echo "salut ca fart </br>";
-    print_r(trouverRecettes("caca", $testee));
-    print_r($testee);
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -72,11 +69,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/> 
     <title>Navigation : <?php echo $select?></title>
-    <link rel="stylesheet" href="../styles.css">    
+    <link rel="stylesheet" href="styles.css">    
     <script>
         //script utilisé pour update la varriable de session visant a garder en mémoire le fil d'ariane
         const beforeAriane = "<?php echo addslashes($fil); ?>";
-        window.onload = function () {
+        window.addEventListener("DOMContentLoaded", () => { 
             document.querySelectorAll(".elemClickable").forEach(lien => {
                 lien.addEventListener("click", async (event) => {
                     event.preventDefault();
@@ -87,47 +84,10 @@
                         body: "cle=filAriane&valeur="+encodeURIComponent(beforeAriane + id + "."),
                         keepalive: true
                     });
-                    console.log(id);
                     window.location.href = lien.href;
                 });
             });
-            //script pour ajouter un cocktail liké
-            document.querySelectorAll(".heartLess").forEach(heart => {
-                heart.addEventListener("click", (event) => {
-                    const id = event.currentTarget.id;
-                    event.currentTarget.src = "Photos/heartFull.png";
-                    event.currentTarget.class = "heartFull";
-                    event.currentTarget.alt = "coeur rouge";
-                    fetch(`ajoutLike.php?cocktail=${encodeURIComponent(id)}`, {
-                    method: "GET",
-                    cache: "no-store"
-                    })
-                    .then(response => response.text())
-                    .then(result => {
-                        console.log("Réponse du serveur :", result);
-                    })
-                    .catch(error => console.error("Erreur :", error));
-                });
-            });
-            //script pour retirer le like
-            document.querySelectorAll(".heartFull").forEach(heart => {
-                heart.addEventListener("click", (event) => {
-                    const id = event.currentTarget.id;
-                    event.currentTarget.src = "Photos/heartLess.png";
-                    event.currentTarget.class = "heartLess";
-                    event.currentTarget.alt = "coeur vide";
-                    fetch(`retirerLike.php?cocktail=${encodeURIComponent(id)}`, {
-                    method: "GET",
-                    cache: "no-store"
-                    })
-                    .then(response => response.text())
-                    .then(result => {
-                        console.log("Réponse du serveur :", result);
-                    })
-                    .catch(error => console.error("Erreur :", error));
-                });
-            });
-        }
+        });
 
         function recupererRecherche() {
             let texte = document.getElementById("rechercheText").value;
@@ -155,6 +115,8 @@
                 return true;
             }
     </script>
+    <script src="js/index_like_dislike.js"></script>
+    <script src="js/full_receipt.js"></script>
 </head>
 <body>
     <!--menu de haut de page-->
@@ -246,7 +208,7 @@
                             <ul><?php
                             foreach($liste as $elem) { //affichage de tout les fils de l'element trouvé
                             ?> 
-                                <li><a id ="<?php echo $elem?>" href="index.php?selection=<?php echo $elem?>"class="elemClickable"><?php echo $elem?></a></li>                                                        
+                                <li><a id ="<?php echo $elem?>" href="index.php?selection=<?php echo $elem?>" class="elemClickable"><?php echo $elem?></a></li>                                                        
                             <?php
                             }
                             ?></ul><?php
@@ -267,7 +229,7 @@
                 $recettes = array_merge($recettes, trouverRecettes($ingredient, $Recettes));
             }
             foreach($recettes as $recette) {?>
-                <div id ="<?php echo $recette;?>" style="border: solid;">
+                <div id ="<?php echo $recette;?>" style="border: solid;" class="cocktail">
                     <?php echo $recette;?> 
                 <?php
                 //afficher la photo si elle existe
