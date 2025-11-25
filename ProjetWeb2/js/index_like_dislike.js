@@ -8,7 +8,7 @@ window.addEventListener("DOMContentLoaded", () => {
             event.currentTarget.src = "Photos/heartFull.png";
             event.currentTarget.class = "heartFull";
             event.currentTarget.alt = "coeur rouge";
-            fetch(`ajoutLike.php?cocktail=${encodeURIComponent(id)}`, {
+            fetch(`php/ajoutLike.php?cocktail=${encodeURIComponent(id)}`, {
             method: "GET",
             cache: "no-store"
             })
@@ -27,7 +27,7 @@ window.addEventListener("DOMContentLoaded", () => {
             event.currentTarget.src = "Photos/heartLess.png";
             event.currentTarget.class = "heartLess";
             event.currentTarget.alt = "coeur vide";
-            fetch(`retirerLike.php?cocktail=${encodeURIComponent(id)}`, {
+            fetch(`php/retirerLike.php?cocktail=${encodeURIComponent(id)}`, {
             method: "GET",
             cache: "no-store"
             })

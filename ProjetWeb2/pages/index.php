@@ -1,5 +1,5 @@
 <?php
-    include "Donnees.inc.php";
+    include "../php/Donnees.inc.php";
     session_start();
 
     $totalAliment = array();
@@ -69,7 +69,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/> 
     <title>Navigation : <?php echo $select?></title>
-    <link rel="stylesheet" href="styles.css">    
+    <link rel="stylesheet" href="../styles.css">    
     <script>
         //script utilisé pour update la varriable de session visant a garder en mémoire le fil d'ariane
         const beforeAriane = "<?php echo addslashes($fil); ?>";
@@ -78,7 +78,7 @@
                 lien.addEventListener("click", async (event) => {
                     event.preventDefault();
                     const id = event.currentTarget.id;
-                    await fetch("majSession.php", {
+                    await fetch("../php/majSession.php", {
                         method: "POST",
                         headers: { "Content-Type": "application/x-www-form-urlencoded" },
                         body: "cle=filAriane&valeur="+encodeURIComponent(beforeAriane + id + "."),
@@ -115,15 +115,15 @@
                 return true;
             }
     </script>
-    <script src="js/index_like_dislike.js"></script>
-    <script src="js/full_receipt.js"></script>
+    <script src="../js/index_like_dislike.js"></script>
+    <script src="../js/full_receipt.js"></script>
 </head>
 <body>
     <!--menu de haut de page-->
     <header>
         <ul>
             <li><a href="index.php">Navigation</a></li>
-            <li><a href="liked.php">Recettes</a><img src="Photos/heartFull.png" alt="coeur rouge" height="20"></li>
+            <li><a href="liked.php">Recettes</a><img src="../Photos/heartFull.png" alt="coeur rouge" height="20"></li>
             <li><!--recherche via syntaxe-->
                 <form id="recherche" action="recherche.php" method="POST" onsubmit="return validerRecherche();">
                     <label>Recherche</label>
@@ -138,12 +138,12 @@
                     ?>
                     </li>
                     <li>
-                        <form action="profil.php">
+                        <form action="../php/profil.php">
                             <input type="submit" value="Profil">
                         </form>
                     </li>
                     <li>
-                        <form action="deconnexion.php">
+                        <form action="../php/deconnexion.php">
                             <input type="submit" value="Se déconnecter">
                         </form>
                     </li>
@@ -151,7 +151,7 @@
                 } else {
                     ?>
                     <li>
-                        <form method="POST" action="connexion.php?page=index">
+                        <form method="POST" action="../php/connexion.php?page=index">
                             <label for="login">Login</label>
                             <input type="text" id="login" name="login" required><br><br>
 
@@ -198,25 +198,24 @@
         }
     ?>
     <!--Séction contenant la navigation-->
-    
-        <?php
-            foreach($Hierarchie as $element => $fils) { 
-                if($element === $select){ //recherche de l'element
-                    foreach($fils as $cats => $liste){
-                        if($cats === "sous-categorie") {
-                            ?><div id="selection" style="border: solid;">
-                            <ul><?php
-                            foreach($liste as $elem) { //affichage de tout les fils de l'element trouvé
-                            ?> 
-                                <li><a id ="<?php echo $elem?>" href="index.php?selection=<?php echo $elem?>" class="elemClickable"><?php echo $elem?></a></li>                                                        
-                            <?php
-                            }
-                            ?></ul><?php
+    <?php
+        foreach($Hierarchie as $element => $fils) { 
+            if($element === $select){ //recherche de l'element
+                foreach($fils as $cats => $liste){
+                    if($cats === "sous-categorie") {
+                        ?><div id="selection" style="border: solid;">
+                        <ul><?php
+                        foreach($liste as $elem) { //affichage de tout les fils de l'element trouvé
+                        ?> 
+                            <li><a id ="<?php echo $elem?>" href="index.php?selection=<?php echo $elem?>" class="elemClickable"><?php echo $elem?></a></li>                                                        
+                        <?php
                         }
+                        ?></ul><?php
                     }
                 }
             }
-        ?>
+        }
+    ?>
         
 
     </div>
@@ -233,12 +232,12 @@
                     <?php echo $recette;?> 
                 <?php
                 //afficher la photo si elle existe
-                $textPhoto = "Photos/".str_replace(' ', '_', $recette).".jpg";
+                $textPhoto = "../Photos/".str_replace(' ', '_', $recette).".jpg";
                 if(file_exists($textPhoto)){?>
                     <img src="<?php echo $textPhoto?>" alt="<?php echo $textPhoto?>" height="200"/>
                     <?php
                 } else {
-                    ?><img src="Photos/default.jpg" alt="default for <?php echo $textPhoto?>" height="200"/><?php
+                    ?><img src="../Photos/default.jpg" alt="default for <?php echo $textPhoto?>" height="200"/><?php
                 }
                 foreach($Recettes as $recInfos) {
                     if($recInfos['titre'] === $recette) {
@@ -253,7 +252,7 @@
                 //si l'utilisateur est connecté passer par le fichier json pour savoir si le cocktail est liké ou pas
                 $arrayLiked;
                 if(isset($_SESSION["login"])) {
-                    $json = file_get_contents("user.json");
+                    $json = file_get_contents("../user.json");
                     $data = json_decode($json, true);
                     foreach($data as $indice => $user) {
                         if($user["login"] === $_SESSION["login"]) {
@@ -268,9 +267,9 @@
                     $arrayLiked = array();
                 }
                 if(array_search($recette, $arrayLiked) === false) {
-                    ?><img src="Photos/heartLess.png" alt="coeur vide" height="20" class="heartLess" id="<?php echo $recette;?>"><?php
+                    ?><img src="../Photos/heartLess.png" alt="coeur vide" height="20" class="heartLess" id="<?php echo $recette;?>"><?php
                 } else {
-                    ?><img src="Photos/heartFull.png" alt="coeur rouge" height="20" class="heartFull" id="<?php echo $recette;?>"><?php 
+                    ?><img src="../Photos/heartFull.png" alt="coeur rouge" height="20" class="heartFull" id="<?php echo $recette;?>"><?php 
                 }
             ?></div><?php
             }

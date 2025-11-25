@@ -1,0 +1,61 @@
+form {
+    max-width: 420px;
+    margin: 60px auto;
+    padding: 25px 30px;
+    background: #fff;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    font-size: 1rem;
+}
+
+/* Titre (legend) */
+form legend {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #b91c1c;
+    text-align: center;
+}
+
+/* Labels + inputs */
+form label {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 6px;
+}
+
+form input[type="text"],
+form input[type="password"],
+form input[type="date"] {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+    margin-bottom: 16px;
+}
+
+/* Radios */
+form input[type="radio"] {
+    margin-left: 8px;
+    margin-right: 4px;
+}
+
+/* Bouton */
+form input[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    background: #b91c1c;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-size: 1.05rem;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: 0.2s;
+}
+
+form input[type="submit"]:hover {
+    background: #a31616;
+}

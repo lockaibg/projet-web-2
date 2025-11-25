@@ -1,6 +1,6 @@
 <?php
 
-include "Donnees.inc.php";
+include "../php/Donnees.inc.php";
 
 if (isset($_POST['rechercheText'])) {
     $texte = $_POST['rechercheText'];
@@ -219,6 +219,70 @@ if (isset($_POST['rechercheText'])) {
 
     </head>
     <body>
+        <header>
+        <ul>
+            <li><a href="index.php">Navigation</a></li>
+            <li><a href="liked.php">Recettes</a><img src="../Photos/heartFull.png" alt="coeur rouge" height="20"></li>
+            <li><!--recherche via syntaxe-->
+                <form id="recherche" action="recherche.php" method="POST" onsubmit="return validerRecherche();">
+                    <label>Recherche</label>
+                    <input type="text" id="rechercheText" name="rechercheText" />
+                    <input type="submit" value="Valider">
+                </form>
+            </li>
+            <li><ul><?php
+                if(isset($_SESSION["login"])) { 
+                    ?><li><?php
+                    echo $_SESSION["login"];
+                    ?>
+                    </li>
+                    <li>
+                        <form action="../php/profil.php">
+                            <input type="submit" value="Profil">
+                        </form>
+                    </li>
+                    <li>
+                        <form action="../php/deconnexion.php">
+                            <input type="submit" value="Se déconnecter">
+                        </form>
+                    </li>
+                    <?php
+                } else {
+                    ?>
+                    <li>
+                        <form method="POST" action="../php/connexion.php?page=index">
+                            <label for="login">Login</label>
+                            <input type="text" id="login" name="login" required><br><br>
+
+                            <label for="mdp">Mot de passe :</label>
+                            <input type="password" id="mdp" name="mdp" required><br><br>
+
+                            <input type="submit" value="Connexion">
+                        </form>
+                    </li>
+                    <?php
+                        if(isset($_GET["err"])) {
+                            if($_GET["err"] == "psw") {
+                                ?>
+                                    <li style="color: red;">mot de passe incorrecte</li>
+                                <?php
+                            } else if($_GET["err"] == "login") {
+                                ?>
+                                    <li style="color: red;">login introuvable</li>
+                                <?php
+                            }
+                        }
+                    ?>
+                    <li>
+                        <form action="register.php">
+                            <input type="submit" value="S'inscrire">
+                        </form>
+                    </li>
+                    <?php
+                }
+            ?></ul></li>
+        </ul>
+    </header>
          <!--séction contenant les recettes synthétiques-->
     <div id="recettes">
         <?php
@@ -234,7 +298,7 @@ if (isset($_POST['rechercheText'])) {
                     <img src="<?php echo $textPhoto?>" alt="<?php echo $textPhoto?>" height="200"/>
                     <?php
                 } else {
-                    ?><img src="Photos/default.jpg" alt="default for <?php echo $textPhoto?>" height="200"/><?php
+                    ?><img src="../Photos/default.jpg" alt="default for <?php echo $textPhoto?>" height="200"/><?php
                 }
                 foreach($Recettes as $recInfos) {
                     if($recInfos['titre'] === $recette) {
