@@ -1,11 +1,12 @@
+
 window.addEventListener("DOMContentLoaded", () => { 
     document.querySelectorAll(".heartFull").forEach(heart => {
         heart.addEventListener("click", (event) => {
-            const id = event.currentTarget.id;
-            event.currentTarget.src = "Photos/heartLess.png";
+            const id = convert_tospace(event.currentTarget.id);
+            event.currentTarget.src = "../Photos/heartLess.png";
             event.currentTarget.class = "heartLess";
             event.currentTarget.alt = "coeur vide";
-            fetch(`php/retirerLike.php?cocktail=${encodeURIComponent(id)}`, {
+            fetch(`../php/retirerLike.php?cocktail=${encodeURIComponent(id)}`, {
             method: "GET",
             cache: "no-store"
             })

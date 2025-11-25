@@ -1,6 +1,7 @@
 <?php
     session_start();
     include "../php/Donnees.inc.php";
+    include "../php/convertUnderScore.php";
 ?>
 
 <!DOCTYPE html>
@@ -11,6 +12,8 @@
     <title>Recettes likés</title>
     <link rel="stylesheet" href="../styles.css">
     <script src="../js/dislike.js"></script>
+    <script src="../js/convertUnderScore.js"></script>
+    <script src="../js/full_receipt.js"></script>
 </head>
 <body>
     <!--menu de haut de page-->
@@ -99,7 +102,7 @@
             $arrayLiked = array();
         }
         foreach($arrayLiked as $recette) {?>
-            <div id ="<?php echo $recette;?>" style="border: solid;">
+            <div id ="<?php echo convert_to_underscore($recette);;?>" style="border: solid;">
                 <?php echo $recette;?> 
             <?php
             //afficher la photo si elle existe
@@ -117,11 +120,12 @@
                         echo "<li>".$ingr."</li>";
                     }
                     break;
-                    ?></ul><?php
+                    
                 }
             }
+            ?></ul><?php
             ?>
-            <img src="../Photos/heartFull.png" alt="coeur entié" height="20" class="heartFull" id="<?php echo $recette;?>">
+            <img src="../Photos/heartFull.png" alt="coeur entié" height="20" width="20" class="heartFull" id="<?php echo convert_to_underscore($recette)."_";?>">
         </div><?php
         }   
     ?></div>

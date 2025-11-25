@@ -20,7 +20,7 @@ window.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".cocktail").forEach(cocktail => {
         cocktail.addEventListener("click", (e) => {
             postToPage("fullRecette.php", {
-                elem: e.currentTarget.id
+                elem: convert_tospace(e.currentTarget.id)
             });
         });
     });
