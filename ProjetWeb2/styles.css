@@ -1,0 +1,293 @@
+/* RESET SIMPLE */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #f5f5f5;
+    color: #222;
+}
+
+/* HEADER / NAVIGATION HAUT DE PAGE */
+
+header {
+    background: #222;
+    color: #fff;
+}
+
+header > ul {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 0.75rem 1.5rem;
+}
+
+/* Sous-liste (admin / profil / déconnexion) */
+header > ul > li > ul {
+    list-style: none;
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+/* Liens de navigation */
+header a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+header a:hover {
+    text-decoration: underline;
+}
+
+/* Formulaire de recherche dans le header */
+header form#recherche {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+header form#recherche label {
+    font-size: 0.9rem;
+}
+
+header form#recherche input[type="text"] {
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    border: 1px solid #555;
+    min-width: 160px;
+}
+
+header form#recherche input[type="submit"],
+header form input[type="submit"] {
+    padding: 0.25rem 0.7rem;
+    border-radius: 4px;
+    border: none;
+    background: #ff6b3d;
+    color: #fff;
+    cursor: pointer;
+    font-size: 0.85rem;
+}
+
+header form input[type="submit"]:hover {
+    background: #ff8b60;
+}
+
+/* IMAGES COEURS DANS LE HEADER */
+
+header img {
+    vertical-align: middle;
+    margin-left: 0.25rem;
+}
+
+/* PAGE RECETTE DÉTAILLÉE (id=recette) */
+
+#recette {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 1.5rem;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) auto;
+    gap: 1.5rem;
+}
+
+/* Titre au-dessus du bloc si tu gardes le <p id="Cocktail_de..."> */
+#Cocktail_de_jus_de_fruits_pour_les_enfants {
+    max-width: 900px;
+    margin: 1.5rem auto 0.5rem;
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+
+/* Typo à l’intérieur du bloc recette */
+#recette h1 {
+    font-size: 1.6rem;
+    margin-bottom: 0.75rem;
+}
+
+#recette h2 {
+    font-size: 1.2rem;
+    margin: 0.75rem 0 0.25rem;
+}
+
+#recette p {
+    margin-bottom: 0.5rem;
+    line-height: 1.5;
+}
+
+/* Image à droite dans la page détaillée */
+#recette img {
+    display: block;
+    max-width: 220px;
+    height: auto;
+    border-radius: 6px;
+    object-fit: cover;
+}
+
+/* ADAPTATION MOBILE POUR LA PAGE DÉTAILLÉE */
+
+@media (max-width: 768px) {
+    #recette {
+        grid-template-columns: 1fr;
+    }
+
+    #recette img {
+        max-width: 100%;
+        justify-self: center;
+    }
+}
+
+/* FIL D’ARIANE */
+
+#filAriane {
+    max-width: 1100px;
+    margin: 1rem auto 0.5rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9rem;
+}
+
+#filAriane a {
+    color: #444;
+    text-decoration: none;
+    margin-right: 0.25rem;
+}
+
+#filAriane a::after {
+    content: ">";
+    margin-left: 0.25rem;
+    color: #aaa;
+}
+
+#filAriane a:last-child::after {
+    content: "";
+}
+
+/* SECTION LISTE DES RECETTES (liked.php + navigation) */
+
+#recettes {
+    max-width: 1100px;
+    margin: 1.5rem auto 3rem;
+    padding: 0 1rem 2rem;
+
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+}
+
+/* Carte contenant chaque cocktail (le <div style="border: solid;">) */
+#recettes > div {
+    background: #fff;
+    border-radius: 8px;
+    border: 1px solid #ddd; /* ton style inline "border: solid" sera surchargé visuellement */
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* Si une seule carte dans #recettes : largeur max = 25% de la page, centrée */
+#recettes > div:only-child {
+    max-width: 25%;
+    min-width: 260px;
+    margin-inline: auto;
+}
+
+/* Bloc .cocktail à l’intérieur de chaque carte */
+
+.cocktail {
+    cursor: pointer; /* cliquable pour afficher la recette complète */
+}
+
+.cocktail h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Image de la carte */
+
+.cocktail img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 6px;
+    margin-bottom: 0.5rem;
+}
+
+/* Liste des ingrédients */
+
+.cocktail ul {
+    list-style: none;
+    margin-top: 0.25rem;
+    padding-left: 0;
+    font-size: 0.9rem;
+}
+
+.cocktail ul li {
+    padding: 0.1rem 0;
+}
+
+/* Bloc like / dislike sous chaque cocktail */
+
+[id$="_like"] {
+    margin-top: 0.5rem;
+    display: flex;
+    justify-content: center;
+}
+
+/* Images de cœur */
+
+.heartFull,
+.heartLess {
+    cursor: pointer;
+    display: block;
+}
+
+/* LIENS CLIQUABLES SPÉCIAUX (classe elemClickable dans ton JS) */
+
+.elemClickable {
+    text-decoration: none;
+    color: inherit;
+}
+
+.elemClickable:hover .cocktail h3 {
+    text-decoration: underline;
+}
+
+/* GLOBAL TYPO / TITRES SIMPLES POUR D’AUTRES PAGES */
+
+h1, h2, h3 {
+    font-family: inherit;
+}
+
+/* PETITES ADAPTATIONS RESPONSIVE GÉNÉRALES */
+
+@media (max-width: 600px) {
+    header > ul {
+        flex-wrap: wrap;
+        gap: 0.75rem;
+    }
+
+    header form#recherche {
+        flex-wrap: wrap;
+        justify-content: flex-start;
+    }
+
+    #recettes {
+        grid-template-columns: 1fr;
+    }
+
+    #recettes > div:only-child {
+        max-width: 100%;
+    }
+}

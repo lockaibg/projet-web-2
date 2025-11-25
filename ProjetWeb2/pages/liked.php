@@ -103,33 +103,34 @@
         }
         foreach($arrayLiked as $recette) {?>
             <div style="border: solid;">
-                    <div class="cocktail" id ="<?php echo convert_to_underscore($recette);?>">
-                        <h3><?php echo $recette;?></h3> 
+                <div class="cocktail" id ="<?php echo convert_to_underscore($recette);?>">
+                    <h3><?php echo $recette;?></h3> 
+                    <?php
+                    //afficher la photo si elle existe
+                    $textPhoto = "../Photos/".str_replace(' ', '_', $recette).".jpg";
+                    if(file_exists($textPhoto)){?>
+                        <img src="<?php echo $textPhoto?>" alt="<?php echo $textPhoto?>" height="200"/>
                         <?php
-                        //afficher la photo si elle existe
-                        $textPhoto = "../Photos/".str_replace(' ', '_', $recette).".jpg";
-                        if(file_exists($textPhoto)){?>
-                            <img src="<?php echo $textPhoto?>" alt="<?php echo $textPhoto?>" height="200"/>
-                            <?php
-                        } else {
-                            ?><img src="../Photos/default.jpg" alt="default for <?php echo $textPhoto?>" height="200"/><?php
-                        }
-                        foreach($Recettes as $recInfos) {
-                            if($recInfos['titre'] === $recette) {
-                                ?><ul><?php
-                                foreach($recInfos['index'] as $ingr) {
-                                    echo "<li>".$ingr."</li>";
-                                }
-                                break;
-                                
+                    } else {
+                        ?><img src="../Photos/default.jpg" alt="default for <?php echo $textPhoto?>" height="200"/><?php
+                    }
+                    foreach($Recettes as $recInfos) {
+                        if($recInfos['titre'] === $recette) {
+                            ?><ul><?php
+                            foreach($recInfos['index'] as $ingr) {
+                                echo "<li>".$ingr."</li>";
                             }
+                            break;
+                            
                         }
-                        ?>
-                        </ul>
-                    </div>
-            <div id ="<?php echo convert_to_underscore($recette) . "_like";?>">
-                <img src="../Photos/heartFull.png" alt="coeur entié" height="20" width="20" class="heartFull" id="<?php echo convert_to_underscore($recette)."_";?>">
-            </div></div><?php
+                    }
+                    ?>
+                    </ul>
+                </div>
+                <div id ="<?php echo convert_to_underscore($recette) . "_like";?>">
+                    <img src="../Photos/heartFull.png" alt="coeur entié" height="20" width="20" class="heartFull" id="<?php echo convert_to_underscore($recette)."_";?>">
+                </div>
+            </div><?php
         }   
     ?>
     </div>
