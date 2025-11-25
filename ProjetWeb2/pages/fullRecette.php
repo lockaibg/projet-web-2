@@ -1,5 +1,6 @@
 <?php 
     include "../php/Donnees.inc.php";
+    include "../php/convertUnderScore.php";
     session_start();
     if(isset($_POST["elem"])) {
         $cocktail = $_POST["elem"];
@@ -82,7 +83,7 @@
             ?></ul></li>
         </ul>
     </header>
-        <p id="<?php echo $cocktail;?>">
+        <p id="<?php echo convert_to_underscore($cocktail);?>">
     <?php
         echo $cocktail;
         foreach($Recettes as $indice => $cocktails) {
