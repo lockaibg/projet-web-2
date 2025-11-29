@@ -304,25 +304,31 @@
             ?></ul></li>
         </ul>
     </header>
-    <?php if ($rechercheEffectuee): ?>
+    <?php if ($rechercheEffectuee) { ?>
         <div id="infos">
             <p>Tu as recherché : <?php echo htmlspecialchars($texteRecherche); ?></p>
-                
+                <?php if (!empty($plusAffichage)) { ?>
                 <p>Éléments souhaités :
                     <?php foreach (array_unique($plusAffichage) as $aff) echo htmlspecialchars($aff). ", "; ?>
                 </p>
+                <?php } ?>
                 
+                <?php if (!empty($moinsAffichage)) { ?>
                 <p>Éléments non souhaités :
                     <?php foreach (array_unique($moinsAffichage) as $aff) echo htmlspecialchars($aff). ", "; ?>
                 </p>
-                
+                <?php } ?>
+
+                <?php if (!empty($nonReconnu)) { ?>
                 <p>Éléments non reconnus :
                     <?php foreach ($nonReconnu as $aff) echo htmlspecialchars($aff). ", "; ?>
                 </p>
+                <?php } ?>
         </div>
-    <?php endif; ?>
+    <?php } ?>
 
     <!--séction contenant les recettes synthétiques-->
+    <?php echo "<p>Nombre de recettes trouvés : " . htmlspecialchars(count($recettesFinales)) . "</p>"; ?>
     <div id="recettes">
         <?php
             $recettes = isset($recettesFinales) ? $recettesFinales : [];
