@@ -140,7 +140,7 @@
                     ?>
                     </li>
                     <li>
-                        <form action="../php/profil.php">
+                        <form action="profil.php">
                             <input type="submit" value="Profil">
                         </form>
                     </li>

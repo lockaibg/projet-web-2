@@ -44,16 +44,82 @@
     <link rel="stylesheet" href="../styles.css">    
 </head>
 <body>
+    <header>
+        <ul>
+            <li><a href="index.php">Navigation</a></li>
+            <li><a href="liked.php">Recettes</a><img src="../Photos/heartFull.png" alt="coeur rouge" height="20"></li>
+            <li><!--recherche via syntaxe-->
+                <form id="recherche" action="recherche.php" method="POST" onsubmit="return validerRecherche();">
+                    <label>Recherche</label>
+                    <input type="text" id="rechercheText" name="rechercheText" />
+                    <input type="submit" value="Valider">
+                </form>
+            </li>
+            <li><ul><?php
+                if(isset($_SESSION["login"])) { 
+                    ?><li><?php
+                    echo $_SESSION["login"];
+                    ?>
+                    </li>
+                    <li>
+                        <form action="profil.php">
+                            <input type="submit" value="Profil">
+                        </form>
+                    </li>
+                    <li>
+                        <form action="../php/deconnexion.php">
+                            <input type="submit" value="Se déconnecter">
+                        </form>
+                    </li>
+                    <?php
+                } else {
+                    ?>
+                    <li>
+                        <form method="POST" action="../php/connexion.php?page=index">
+                            <label for="login">Login</label>
+                            <input type="text" id="login" name="login" required><br><br>
+
+                            <label for="mdp">Mot de passe :</label>
+                            <input type="password" id="mdp" name="mdp" required><br><br>
+
+                            <input type="submit" value="Connexion">
+                        </form>
+                    </li>
+                    <?php
+                        if(isset($_GET["err"])) {
+                            if($_GET["err"] == "psw") {
+                                ?>
+                                    <li style="color: red;">mot de passe incorrecte</li>
+                                <?php
+                            } else if($_GET["err"] == "login") {
+                                ?>
+                                    <li style="color: red;">login introuvable</li>
+                                <?php
+                            }
+                        }
+                    ?>
+                    <li>
+                        <form action="register.php">
+                            <input type="submit" value="S'inscrire">
+                        </form>
+                    </li>
+                    <?php
+                }
+            ?></ul></li>
+        </ul>
+    </header>
     <?php
         if($loginErreur) {
             ?><p style="color: red;">login déjà utilisé</p> <?php
         }
     ?>
+    <h1>Créer un compte</h1>
+    <br/>
     <form method="POST" action="#">
 
-        <legend>Créer un compte</legend>
         
-        <label for="longin">Login</label>
+        
+        <label for="login">Login</label>
         <input type="text" id="login" name="login" required>
         <?php if(isset($error["login"])) { ?><p style="color: red;">Login : Uniquement chiffres et lettres</p><?php } else { ?> <br /> <br /><?php } ?>
         
@@ -63,17 +129,17 @@
         Vous êtes :  
         <input type="radio" name="sexe" value="f"/> une femme     
         <input type="radio" name="sexe" value="h"/> un homme
-        <br />
+        <br /> <br/>
 
-        <label for="Nom">Nom</label>
+        <label for="name">Nom</label>
         <input type="text" id="name" name="name">        
         <?php if(isset($error["name"])) { ?><p style="color: red;">Nom : Uniquement Lettres {-} ou {'}</p><?php } else { ?> <br /> <br /><?php } ?>
 
-        <label for="Prenom">Prenom</label>
+        <label for="prenom">Prenom</label>
         <input type="text" id="prenom" name="prenom">
         <?php if(isset($error["name"])) { ?><p style="color: red;">Prenom : Uniquement Lettres {-} ou {'}</p><?php } else { ?> <br /> <br /><?php } ?>
 
-        <label for="Date">Date de naissance : </label>
+        <label for="naissance">Date de naissance : </label>
         <input type="date" id ="naissance" name="naissance" /><br />
 
         <input type="submit" value="Envoyer">

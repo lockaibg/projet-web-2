@@ -88,7 +88,7 @@
     }
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/> 
@@ -117,7 +117,7 @@
                     ?>
                     </li>
                     <li>
-                        <form action="../php/profil.php">
+                        <form action="profil.php">
                             <input type="submit" value="Profil">
                         </form>
                     </li>
@@ -273,17 +273,17 @@
                 foreach ($plusAffichage as $affichage) {
                     echo htmlspecialchars($affichage). ", ";
                 } 
-                echo "</br>";   
+                echo "<br/>";   
                 echo "Liste éléments non souhaités : ";
                 foreach ($moinsAffichage as $affichage) {
                     echo htmlspecialchars($affichage). ", ";
                 } 
-                echo "</br>";
+                echo "<br/>";
                 echo "Liste éléments non reconnus : ";
                 foreach ($nonReconnu as $affichage) {
                     echo htmlspecialchars($affichage). ", ";
                 } 
-                echo "</br>";
+                echo "<br/>";
             }
 
         ?>
