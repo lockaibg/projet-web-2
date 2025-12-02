@@ -340,26 +340,17 @@
                         <span style="font-weight:bold; color: <?php echo ($score == 100 ? 'green' : '#d35400'); ?>">
                                 <?php echo number_format($score, 0); ?>%
                         </span>
-                    <?php
-                    //afficher la photo si elle existe
-                    $textPhoto = "../Photos/".str_replace(' ', '_', $titreRecette).".jpg";
-                    if(file_exists($textPhoto)){?>
-                        <img src="<?php echo $textPhoto?>" alt="<?php echo $textPhoto?>" height="200"/>
-                        <?php
-                    } else {
-                        ?><img src="../Photos/default.jpg" alt="default for <?php echo $textPhoto?>" height="200"/><?php
-                    }
-                    foreach($Recettes as $recInfos) {
-                        if($recInfos['titre'] === $recette) {
-                            ?><ul><?php
-                            foreach($recInfos['index'] as $ingr) {
-                                echo "<li>".$ingr."</li>";
+
+                        <img src="<?php echo $cheminPhoto; ?>" alt="<?php echo $titreRecette; ?>" height="200"/>
+                        <h4>Ingrédients :</h4>
+                        <ul>
+                            <?php
+                            // On utilise directement $recetteData['index'] qui contient les ingrédients
+                            foreach($recetteData['index'] as $ingredient) {
+                                echo "<li>" . $ingredient . "</li>";
                             }
-                            break;
-                            
-                        }
-                    }
-                    ?></ul></div>
+                            ?>
+                        </ul></div>
                         
                         <div id ="<?php echo convert_to_underscore($recette) . "_like";?>">
                         <?php
