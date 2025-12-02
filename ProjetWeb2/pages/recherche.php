@@ -87,18 +87,34 @@
         return $out;
     }
 
+    // Vérifie si un ingrédient ou un de ses enfants est présent dans la recette
+    function recetteContientIngredient($recetteIndex, $ingredientCible) {
+        global $Hierarchie;
+        $variantes = trouverToutDescendant($ingredientCible, $Hierarchie);
+        
+        foreach ($recetteIndex as $ingrRecette) {
+            foreach ($variantes as $variante) {
+                if (strcasecmp($ingrRecette, $variante) === 0) return true;
+                if (stripos($ingrRecette, $variante) !== false) return true; 
+            }
+        }
+        return false;
+    }
+
     $rechercheEffectuee = false;
-    $texteRecherche = "";
-    $plusAffichage = [];
-    $moinsAffichage = [];
-    $nonReconnu = [];
+    $erreurSyntaxe = "";
+    $messageResultat = "";
+    
+    $listeSouhaites = [];
+    $listeNonSouhaites = [];
+    $listeNonReconnus = [];
+    
     $recettesFinales = [];
-    $recettesFinalesAvecScores = [];
 
     if (isset($_POST['rechercheText'])) {
     $rechercheEffectuee = true;
     $texte = $_POST['rechercheText'];
-    $texteRecherche = $texte; //Sauvegarde pour l'affichage HTML
+    $texteAffichage = $texte; //Sauvegarde pour l'affichage HTML
 
     $plus = [];
     $moins = [];
@@ -112,21 +128,24 @@
     $baseRecettesTitres = []; 
 
     //Gestion des guillemets (Recherche Exacte)
-    if (preg_match('/^"([^"]+)"\s*(.*)$/', $texte, $match)) {
-        $premierMot = $match[1];
-        $texte = trim($match[2]);
-        $ingredientsMotExact = trouverToutDescendant($premierMot, $Hierarchie);
+    preg_match_all('/([+-]?)\s*(?:"([^"]+)"|([^\s]+))/', $texte, $matches, PREG_SET_ORDER);
+    foreach ($matches as $match) {
+        $signe = $match[1];
+        $mot = !empty($match[2]) ? $match[2] : $match[3]; 
 
-        $resultatsProv = [];
-        foreach ($ingredientsMotExact as $ing) {
-            $resultatsProv = array_merge($resultatsProv, trouverRecettes($ing, $Recettes));
+        if (empty($signe) && !empty($mot) && (substr($mot, 0, 1) === '+' || substr($mot, 0, 1) === '-')) {
+            $signe = substr($mot, 0, 1); // On récupère le signe
+            $mot = substr($mot, 1);      // On l'enlève du mot
         }
 
-        if (empty($resultatsProv)) {
-            $nonReconnu[] = $premierMot;
+        if (!ingredientExiste($mot)) {
+            $listeNonReconnus[] = $mot; 
         } else {
-            $plus[] = $premierMot;
-            $baseRecettesTitres = $resultatsProv;
+            if ($signe === '-') {
+                $listeNonSouhaites[] = $mot;
+            } else {
+                $listeSouhaites[] = $mot;
+            }
         }
     }
 
@@ -142,91 +161,57 @@
             $sansSigne[] = $mot;
         }
     }
+    $totalCriteres = count($listeSouhaites) + count($listeNonSouhaites);
 
-    //Configuration des poids
-    $POIDS_PRINCIPAL = 10;
-    $POIDS_PLUS = 3;
-    $POIDS_MOINS = -10;
-
-    $termesSouhaites = array_unique(array_merge($plus, $sansSigne));
-    $recettesScores = [];
-
-    //Si pas de mot clé principal (guillemets), la base est toutes les recettes
-    if (empty($baseRecettesTitres) && $premierMot === null) {
-        foreach ($Recettes as $recette) {
-            $baseRecettesTitres[] = $recette['titre'];
-        }
-    }
-
-    //Initialisation des scores à 0
-    foreach ($Recettes as $recette) {
-        if (in_array($recette['titre'], $baseRecettesTitres)) {
-            $recettesScores[$recette['titre']] = [
-                'titre' => $recette['titre'],
-                'score' => 0,
-                'ingredients' => $recette['index']
-            ];
-        }
-    }
-
-    //Calcul Bonus
-    foreach ($termesSouhaites as $oblig) {
-        if (!ingredientExiste($oblig)) {
-            $nonReconnu[] = $oblig;
-            continue;
-        }
-        $plusAffichage[] = $oblig;
-        $descendants = trouverToutDescendant($oblig, $Hierarchie);
+    if ($totalCriteres === 0 && empty($listeNonReconnus)) {
+            $messageResultat = "Problème dans votre requête : recherche impossible";
+    } elseif ($totalCriteres > 0) {
         
-        $poids = ($oblig === $premierMot) ? $POIDS_PRINCIPAL : $POIDS_PLUS;
+        foreach ($Recettes as $recette) {
+            $satisfactionCount = 0;
+            
+            // Critères "Souhaités" : La recette DOIT contenir l'ingrédient
+            foreach ($listeSouhaites as $ing) {
+                if (recetteContientIngredient($recette['index'], $ing)) {
+                    $satisfactionCount++;
+                }
+            }
 
-        foreach ($recettesScores as $titre => $data) {
-            foreach ($data['ingredients'] as $ingrRecette) {
-                if (in_array($ingrRecette, $descendants)) {
-                    $recettesScores[$titre]['score'] += $poids;
-                    break;
+            // Critères "Non Souhaités" : La recette NE DOIT PAS contenir l'ingrédient
+            foreach ($listeNonSouhaites as $ing) {
+                if (!recetteContientIngredient($recette['index'], $ing)) {
+                    // Si elle ne le contient pas, le critère est satisfait !
+                    $satisfactionCount++;
+                }
+            }
+
+            // Calcul du score en %
+            $score = ($satisfactionCount / $totalCriteres) * 100;
+
+            // Filtrage selon le mode (Exact vs Approximatif)
+            if ($totalCriteres === 1) {
+                // Recherche Exacte : Il faut 100% (le seul critère doit être valide)
+                if ($score == 100) {
+                    $recettesFinales[] = ['recette' => $recette, 'score' => 100];
+                }
+            } else {
+                // Recherche Approximative : On garde si score > 0
+                if ($score > 0) {
+                    $recettesFinales[] = ['recette' => $recette, 'score' => $score];
                 }
             }
         }
-    }
 
-    //Calcul Malus
-    foreach ($moins as $interdit) {
-        if (!ingredientExiste($interdit)) {
-            $nonReconnu[] = $interdit;
-            continue;
-        }
-        $moinsAffichage[] = $interdit;
-        $descendants = trouverToutDescendant($interdit, $Hierarchie);
-
-        foreach ($recettesScores as $titre => $data) {
-            foreach ($data['ingredients'] as $ingrRecette) {
-                if (in_array($ingrRecette, $descendants)) {
-                    $recettesScores[$titre]['score'] += $POIDS_MOINS;
-                    break;
-                }
+        //Tri par pertinence (Score décroissant)
+        usort($recettesFinales, function($a, $b) {
+            if ($a['score'] == $b['score']) {
+                return 0;
             }
-        }
+            return ($a['score'] > $b['score']) ? -1 : 1;
+        });
     }
-
-    //Tri
-    $recettesFiltrees = $recettesScores;
-    //On vérifie qu'il y a des recettes à trier
-    if (!empty($recettesFiltrees)) {
-        $scores = array_column($recettesFiltrees, 'score');
-        array_multisort($scores, SORT_DESC, $recettesFiltrees);
-    }
-
-    //Filtrage final (Affichage uniquement si score positif ou mot exact présent)
-    foreach ($recettesFiltrees as $data) {
-        if ($data['score'] > 0 || ($premierMot !== null && $data['score'] > -5)) {
-            $recettesFinalesAvecScores[$data['titre']] = $data['score'];
-        }
-    }
-
-    $recettesFinales = array_keys($recettesFinalesAvecScores);
-                
-    }
+}
+    
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -306,24 +291,24 @@
     </header>
     <?php if ($rechercheEffectuee) { ?>
         <div id="infos">
-            <p>Tu as recherché : <?php echo htmlspecialchars($texteRecherche); ?></p>
-                <?php if (!empty($plusAffichage)) { ?>
-                <p>Éléments souhaités :
-                    <?php foreach (array_unique($plusAffichage) as $aff) echo htmlspecialchars($aff). ", "; ?>
-                </p>
-                <?php } ?>
-                
-                <?php if (!empty($moinsAffichage)) { ?>
-                <p>Éléments non souhaités :
-                    <?php foreach (array_unique($moinsAffichage) as $aff) echo htmlspecialchars($aff). ", "; ?>
-                </p>
-                <?php } ?>
+            <?php if ($erreurSyntaxe): ?>
+                <?php echo "<p>" . $erreurSyntaxe . "</p>"; ?>
+            <?php elseif ($messageResultat): ?>
+                <?php echo "<p>" . $messageResultat . "</p>"; ?>
+            <?php else: ?>
+                <?php if (!empty($listeSouhaites)): ?>
+                    <p>Liste des aliments souhaités : <?php echo implode(', ', $listeSouhaites); ?></p>
+                <?php endif; ?>
 
-                <?php if (!empty($nonReconnu)) { ?>
-                <p>Éléments non reconnus :
-                    <?php foreach ($nonReconnu as $aff) echo htmlspecialchars($aff). ", "; ?>
-                </p>
-                <?php } ?>
+                <?php if (!empty($listeNonSouhaites)): ?>
+                    <p>Liste des aliments non souhaités : <?php echo implode(', ', $listeNonSouhaites); ?></p>
+                <?php endif; ?>
+
+                <?php if (!empty($listeNonReconnus)): ?>
+                    <p>Éléments non reconnus dans la requête : <span><?php echo implode(', ', $listeNonReconnus); ?></span></p>
+                <?php endif; ?>
+
+            <?php endif; ?>
         </div>
     <?php } ?>
 
@@ -331,19 +316,33 @@
     <?php echo "<p>Nombre de recettes trouvés : " . htmlspecialchars(count($recettesFinales)) . "</p>"; ?>
     <div id="recettes">
         <?php
-            $recettes = isset($recettesFinales) ? $recettesFinales : [];
+            $listeRecettes = isset($recettesFinales) ? $recettesFinales : [];
 
-            if (empty($recettes) && $rechercheEffectuee) {
+            if (empty($listeRecettes) && $rechercheEffectuee) {
                 echo "<p>Aucune recette trouvée avec ces critères.</p>";
             }
-            
-            foreach($recettes as $recette) {?>
+
+            foreach($listeRecettes as $item) {
+                $recetteData = $item['recette']; // Les infos de la recette (titre, index, etc.)
+                $score = $item['score'];         // Le score de pertinence
+                $titreRecette = $recetteData['titre']; // Le titre (ex: "Mojito")
+                
+                // Calcul du nom de la photo
+                $nomFichierPhoto = str_replace(' ', '_', $titreRecette);
+                $cheminPhoto = "../Photos/" . $nomFichierPhoto . ".jpg";
+                if (!file_exists($cheminPhoto)) {
+                    $cheminPhoto = "../Photos/default.jpg";
+                }
+                ?>
                 <div style="border: solid;">
-                    <div class="cocktail" id ="<?php echo convert_to_underscore($recette);?>">
-                        <h3><?php echo $recette;?></h3> 
+                    <div class="cocktail" id ="<?php echo convert_to_underscore($titreRecette);?>">
+                        <h3><?php echo $titreRecette;?></h3> 
+                        <span style="font-weight:bold; color: <?php echo ($score == 100 ? 'green' : '#d35400'); ?>">
+                                <?php echo number_format($score, 0); ?>%
+                        </span>
                     <?php
                     //afficher la photo si elle existe
-                    $textPhoto = "../Photos/".str_replace(' ', '_', $recette).".jpg";
+                    $textPhoto = "../Photos/".str_replace(' ', '_', $titreRecette).".jpg";
                     if(file_exists($textPhoto)){?>
                         <img src="<?php echo $textPhoto?>" alt="<?php echo $textPhoto?>" height="200"/>
                         <?php
