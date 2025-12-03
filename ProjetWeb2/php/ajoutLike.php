@@ -14,7 +14,16 @@
                 break;
             }
         }
-        if(array_search($_GET["cocktail"], $userdata["liked"]) === false) { 
+        if($userdata["liked"] !== null) {
+            if(array_search($_GET["cocktail"], $userdata["liked"]) === false) { 
+                array_push($userdata["liked"], $_GET["cocktail"]);
+                $fichier = "../user.json";
+                $tab = json_decode(file_get_contents($fichier), true);
+                $tab[$indice] = $userdata;
+                file_put_contents($fichier, json_encode($tab, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+            }
+        } else {
+            $userdata["liked"] = array();
             array_push($userdata["liked"], $_GET["cocktail"]);
             $fichier = "../user.json";
             $tab = json_decode(file_get_contents($fichier), true);
@@ -23,10 +32,14 @@
         }
     } else {
         $doable = true;
-        foreach($_SESSION["liked"] as $cocktail) {
-            if($cocktail === $_GET["cocktail"]) {
-                $doable = false;
+        if(isset($_SESSION["liked"])) {
+            foreach($_SESSION["liked"] as $cocktail) {
+                if($cocktail === $_GET["cocktail"]) {
+                    $doable = false;
+                }
             }
+        } else {
+            $_SESSION["liked"][] = $_GET["cocktail"];
         }
         if($doable) $_SESSION["liked"][] = $_GET["cocktail"];
     }

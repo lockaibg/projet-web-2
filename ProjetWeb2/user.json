@@ -6,51 +6,11 @@
         "prenom": "",
         "naissance": "",
         "liked": {
-            "1": "Cocktail de jus de fruits pour les enfants",
-            "4": "Builder",
-            "5": "Cocktail Balalaïka",
-            "6": "Mojito au Basilic",
-            "7": "Bloody Mary",
-            "8": "Cocktail au Martini",
-            "9": "Aquarium"
+            "0": "Sangria sans alcool",
+            "1": "Cocktail au Martini",
+            "2": "Builder",
+            "3": "Cocktail apéritif",
+            "5": "Porto Flip"
         }
-    },
-    {
-        "login": "zegfq",
-        "mdp": "qaz",
-        "sexe": "f",
-        "name": "",
-        "prenom": "",
-        "naissance": "",
-        "liked": [
-            "Sangria sans alcool",
-            "Cocktail aux framboise",
-            "Cocktail tropical délicieux"
-        ]
-    },
-    {
-        "login": "Lockai",
-        "mdp": "Alomora13",
-        "name": "Philémon",
-        "prenom": "L'archevêque fz",
-        "naissance": "",
-        "liked": []
-    },
-    {
-        "login": "qzf",
-        "mdp": "admin",
-        "name": "",
-        "prenom": "",
-        "naissance": "",
-        "liked": []
-    },
-    {
-        "login": "caca",
-        "mdp": "pipi",
-        "sexe": "h",
-        "name": "tlan",
-        "prenom": "lan",
-        "naissance": "2005-02-07",
-        "liked": []
     }
 ]

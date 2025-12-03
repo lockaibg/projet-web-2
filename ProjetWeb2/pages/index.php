@@ -274,10 +274,14 @@
                         } else {
                             $arrayLiked = array();
                         }
-                        if(array_search($recette, $arrayLiked) === false) {
-                            ?><img src="../Photos/heartLess.png" alt="coeur vide" height="20" class="heartLess" id="<?php echo convert_to_underscore($recette)."_";?>"><?php
+                        if($arrayLiked !== null) {
+                            if(array_search($recette, $arrayLiked) === false) {
+                                ?><img src="../Photos/heartLess.png" alt="coeur vide" height="20" class="heartLess" id="<?php echo convert_to_underscore($recette)."_";?>"><?php
+                            } else {
+                                ?><img src="../Photos/heartFull.png" alt="coeur rouge" height="20" class="heartFull" id="<?php echo convert_to_underscore($recette)."_";?>"><?php 
+                            }
                         } else {
-                            ?><img src="../Photos/heartFull.png" alt="coeur rouge" height="20" class="heartFull" id="<?php echo convert_to_underscore($recette)."_";?>"><?php 
+                            ?><img src="../Photos/heartLess.png" alt="coeur vide" height="20" class="heartLess" id="<?php echo convert_to_underscore($recette)."_";?>"><?php
                         }
                     ?></div>
                 </div>

@@ -1,5 +1,6 @@
 <?php
     session_start();
+    if(!isset($_SESSION["login"])) exit (-1);
     $loginErreur = false;
     if(isset($_POST["login"])) {
         $error = array();
@@ -15,16 +16,19 @@
             $json = file_get_contents("../user.json");
             $data = json_decode($json, true);
             foreach($data as $user) {
-                if($user["login"] === $_POST["login"]) {
+                if($user["login"] === $_POST["login"] && $_POST["login"] !== $_SESSION["login"]) {
                     $loginErreur = true;
                 }
             }
             if(!$loginErreur) {
                 $fichier = "../user.json";
-                $nouveau = $_POST;
-                $nouveau['liked'] = array();
+                $changes = $_POST;
                 $tab = json_decode(file_get_contents($fichier), true);
-                $tab[] = $nouveau;
+                $changes["liked"] = $tab["liked"];
+                foreach($tab as $indice => $users) {
+                    if($users["login"] === $_SESSION["login"]) 
+                        $tab[$indice] = $changes;
+                }
                 file_put_contents($fichier, json_encode($tab, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
                 $_SESSION["login"] = $_POST["login"];
                 header("Location: index.php");
@@ -32,7 +36,16 @@
             }
         }
     }
-    
+    $json = file_get_contents("../user.json");
+    $data = json_decode($json, true);
+    $donnees = array();
+    foreach($data as $indice => $user) {
+        if($user["login"] === $_SESSION["login"]) {
+            foreach($user as $key => $value) {
+                $donnees[$key] = $value;
+            }
+        }
+    }
 ?>
 
 <!DOCTYPE html>
@@ -40,7 +53,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/> 
-    <title>Enregistrement</title>
+    <title>Profil</title>
     <link rel="stylesheet" href="../styles.css">    
 </head>
 <body>
@@ -113,36 +126,36 @@
             ?><p style="color: red;">login déjà utilisé</p> <?php
         }
     ?>
-    <h1>Créer un compte</h1>
+    <h1>Modifier le profil</h1>
     <br/>
     <form method="POST" action="#">
 
         
         
         <label for="login">Login</label>
-        <input type="text" id="login" name="login" required>
+        <input type="text" id="login" name="login" value="<?php echo $donnees["login"];?>" required>
         <?php if(isset($error["login"])) { ?><p style="color: red;">Login : Uniquement chiffres et lettres</p><?php } else { ?> <br /> <br /><?php } ?>
         
         <label for="mdp">Mot de passe :</label>
-        <input type="password" id="mdp" name="mdp" required><br><br>
+        <input type="password" id="mdp" name="mdp" value="<?php echo $donnees["mdp"];?>" required><br><br>
 
         Vous êtes :  
-        <input type="radio" name="sexe" value="f"/> une femme     
-        <input type="radio" name="sexe" value="h"/> un homme
+        <input type="radio" name="sexe" value="f" <?php if(isset($donnees["sexe"])) if($donnees["sexe"] == "f") echo "checked"; ?>/> une femme     
+        <input type="radio" name="sexe" value="h" <?php if(isset($donnees["sexe"])) if($donnees["sexe"] == "h") echo "checked"; ?>/> un homme
         <br /> <br/>
 
         <label for="name">Nom</label>
-        <input type="text" id="name" name="name">        
+        <input type="text" id="name" name="name" value="<?php if(isset($donnees["name"])) echo $donnees["name"];?>">        
         <?php if(isset($error["name"])) { ?><p style="color: red;">Nom : Uniquement Lettres {-} ou {'}</p><?php } else { ?> <br /> <br /><?php } ?>
 
         <label for="prenom">Prenom</label>
-        <input type="text" id="prenom" name="prenom">
+        <input type="text" id="prenom" name="prenom" value="<?php if(isset($donnees["prenom"])) echo $donnees["prenom"];?>">
         <?php if(isset($error["name"])) { ?><p style="color: red;">Prenom : Uniquement Lettres {-} ou {'}</p><?php } else { ?> <br /> <br /><?php } ?>
 
         <label for="naissance">Date de naissance : </label>
-        <input type="date" id ="naissance" name="naissance" /><br />
+        <input type="date" id ="naissance" name="naissance" value="<?php if(isset($donnees["naissance"])) echo $donnees["naissance"];?>" /><br />
 
-        <input type="submit" value="Envoyer">
+        <input type="submit" value="modifier les données">
     </form>
 </body>
 </html>
