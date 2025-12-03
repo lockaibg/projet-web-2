@@ -14,6 +14,7 @@
     <script src="../js/dislike.js"></script>
     <script src="../js/convertUnderScore.js"></script>
     <script src="../js/full_receipt.js"></script>
+    <script src="../js/rechercheValidator.js"></script>
 </head>
 <body>
     <!--menu de haut de page-->

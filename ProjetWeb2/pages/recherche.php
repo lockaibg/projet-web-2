@@ -1,4 +1,5 @@
 <?php
+    session_start();
     include "../php/convertUnderScore.php";
     include "../php/Donnees.inc.php";
     function ingredientExiste($ingredient) {
@@ -223,6 +224,7 @@
     <script src="../js/convertUnderScore.js"></script>
     <script src="../js/index_like_dislike.js"></script>
     <script src="../js/full_receipt.js"></script>
+    <script src="../js/rechercheValidator.js"></script>
 </head>
 <body>
     <header>

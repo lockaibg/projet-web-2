@@ -17,6 +17,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/> 
     <title><?php echo $cocktail?></title>
     <link rel="stylesheet" href="../styles.css">
+    <script src="../js/rechercheValidator.js"></script>
 </head>
 <body>
     <header>
@@ -85,7 +86,6 @@
     </header>
         <p id="<?php echo convert_to_underscore($cocktail);?>">
     <?php
-        echo $cocktail;
         foreach($Recettes as $indice => $cocktails) {
             if($cocktails['titre'] === $cocktail) {
                 ?>

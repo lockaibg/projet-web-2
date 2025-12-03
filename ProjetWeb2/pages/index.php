@@ -89,36 +89,11 @@
                 });
             });
         });
-
-        function recupererRecherche() {
-            let texte = document.getElementById("rechercheText").value;
-                fetch("recherche.php", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/x-www-form-urlencoded"},
-                    body: "texte=" + encodeURIComponent(texte)
-                })
-                .then(res => res.json())
-                .then(data => {
-                    console.log("Traitement de recherche :", data)
-                    data.forEach(mot => console.log(mot));
-                })
-                .catch(error => console.error("Erreur :", error));
-        }
-
-        function validerRecherche() {
-                const texte = document.getElementById('rechercheText').value;
-                const matches = texte.match(/"/g);
-                const nombreDeQuotes = matches ? matches.length : 0;
-                if (nombreDeQuotes % 2 !== 0) {
-                    alert("Problème de syntaxe dans votre requête : nombre impair de double-quotes");
-                    return false;
-                }
-                return true;
-            }
     </script>
     <script src="../js/convertUnderScore.js"></script>
     <script src="../js/index_like_dislike.js"></script>
     <script src="../js/full_receipt.js"></script>
+    <script src="../js/rechercheValidator.js"></script>
 </head>
 <body>
     <!--menu de haut de page-->
@@ -226,66 +201,71 @@
         <?php
             $ingredients = trouverToutDescendant($select, $Hierarchie);
             $recettes = array();
+            $recetteDejaAffiche = array();
             foreach($ingredients as $ingredient) {
                 $recettes = array_merge($recettes, trouverRecettes($ingredient, $Recettes));
             }
-            foreach($recettes as $recette) {?>
-                <div style="border: solid;">
-                    <div class="cocktail" id ="<?php echo convert_to_underscore($recette);?>">
-                        <h3><?php echo $recette;?></h3> 
-                    <?php
-                    //afficher la photo si elle existe
-                    $textPhoto = "../Photos/".str_replace(' ', '_', $recette).".jpg";
-                    if(file_exists($textPhoto)){?>
-                        <img src="<?php echo $textPhoto?>" alt="<?php echo $textPhoto?>" height="200"/>
+            foreach($recettes as $recette) {
+                if(array_search($recette, $recetteDejaAffiche) === false) {
+                    $recetteDejaAffiche[] = $recette;?>
+                    
+                    <div style="border: solid;">
+                        <div class="cocktail" id ="<?php echo convert_to_underscore($recette);?>">
+                            <h3><?php echo $recette;?></h3> 
                         <?php
-                    } else {
-                        ?><img src="../Photos/default.jpg" alt="default for <?php echo $textPhoto?>" height="200"/><?php
-                    }
-                    foreach($Recettes as $recInfos) {
-                        if($recInfos['titre'] === $recette) {
-                            ?><ul><?php
-                            foreach($recInfos['index'] as $ingr) {
-                                echo "<li>".$ingr."</li>";
-                            }
-                            break;
-                            
+                        //afficher la photo si elle existe
+                        $textPhoto = "../Photos/".str_replace(' ', '_', $recette).".jpg";
+                        if(file_exists($textPhoto)){?>
+                            <img src="<?php echo $textPhoto?>" alt="<?php echo $textPhoto?>" height="200"/>
+                            <?php
+                        } else {
+                            ?><img src="../Photos/default.jpg" alt="default for <?php echo $textPhoto?>" height="200"/><?php
                         }
-                    }
-                    ?></ul></div>
-                        
-                        <div id ="<?php echo convert_to_underscore($recette) . "_like";?>">
-                        <?php
-
-                        //si l'utilisateur est connecté passer par le fichier json pour savoir si le cocktail est liké ou pas
-                        $arrayLiked;
-                        if(isset($_SESSION["login"])) {
-                            $json = file_get_contents("../user.json");
-                            $data = json_decode($json, true);
-                            foreach($data as $indice => $user) {
-                                if($user["login"] === $_SESSION["login"]) {
-                                    $arrayLiked = $user["liked"];
-                                    break;
+                        foreach($Recettes as $recInfos) {
+                            if($recInfos['titre'] === $recette) {
+                                ?><ul><?php
+                                foreach($recInfos['index'] as $ingr) {
+                                    echo "<li>".$ingr."</li>";
                                 }
+                                break;
+                                
                             }
-                        //si l'utilisateur est déconnecter utiliser la varriable de session "liked"
-                        } else if(isset($_SESSION["liked"])) {
-                            $arrayLiked = $_SESSION["liked"];
-                        } else {
-                            $arrayLiked = array();
                         }
-                        if($arrayLiked !== null) {
-                            if(array_search($recette, $arrayLiked) === false) {
-                                ?><img src="../Photos/heartLess.png" alt="coeur vide" height="20" class="heartLess" id="<?php echo convert_to_underscore($recette)."_";?>"><?php
+                        ?></ul></div>
+                            
+                            <div id ="<?php echo convert_to_underscore($recette) . "_like";?>">
+                            <?php
+
+                            //si l'utilisateur est connecté passer par le fichier json pour savoir si le cocktail est liké ou pas
+                            $arrayLiked;
+                            if(isset($_SESSION["login"])) {
+                                $json = file_get_contents("../user.json");
+                                $data = json_decode($json, true);
+                                foreach($data as $indice => $user) {
+                                    if($user["login"] === $_SESSION["login"]) {
+                                        $arrayLiked = $user["liked"];
+                                        break;
+                                    }
+                                }
+                            //si l'utilisateur est déconnecter utiliser la varriable de session "liked"
+                            } else if(isset($_SESSION["liked"])) {
+                                $arrayLiked = $_SESSION["liked"];
                             } else {
-                                ?><img src="../Photos/heartFull.png" alt="coeur rouge" height="20" class="heartFull" id="<?php echo convert_to_underscore($recette)."_";?>"><?php 
+                                $arrayLiked = array();
                             }
-                        } else {
-                            ?><img src="../Photos/heartLess.png" alt="coeur vide" height="20" class="heartLess" id="<?php echo convert_to_underscore($recette)."_";?>"><?php
-                        }
-                    ?></div>
-                </div>
+                            if($arrayLiked !== null) {
+                                if(array_search($recette, $arrayLiked) === false) {
+                                    ?><img src="../Photos/heartLess.png" alt="coeur vide" height="20" class="heartLess" id="<?php echo convert_to_underscore($recette)."_";?>"><?php
+                                } else {
+                                    ?><img src="../Photos/heartFull.png" alt="coeur rouge" height="20" class="heartFull" id="<?php echo convert_to_underscore($recette)."_";?>"><?php 
+                                }
+                            } else {
+                                ?><img src="../Photos/heartLess.png" alt="coeur vide" height="20" class="heartLess" id="<?php echo convert_to_underscore($recette)."_";?>"><?php
+                            }
+                        ?></div>
+                    </div>
                 <?php
+                }
             }
         ?>
     </div>

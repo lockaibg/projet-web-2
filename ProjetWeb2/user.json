@@ -1,16 +1,37 @@
 [
     {
-        "login": "admin",
+        "sexe": "f",
+        "name": "Philémon",
+        "prenom": "azfaz",
+        "naissance": "",
+        "liked": [
+            "Sangria sans alcool"
+        ],
         "mdp": "admin",
+        "login": "admin"
+    },
+    {
+        "login": "phiphiLaBinouz",
+        "mdp": "ouvre",
+        "sexe": "h",
+        "name": "Philemon",
+        "prenom": "Larch",
+        "naissance": "",
+        "liked": [
+            "Red cocktail",
+            "Rainbow",
+            "Screwdriver",
+            "Le baiser de la Schtroumpfette",
+            "Tutti cocktail",
+            "Shot piquant"
+        ]
+    },
+    {
         "name": "",
         "prenom": "",
         "naissance": "",
-        "liked": {
-            "0": "Sangria sans alcool",
-            "1": "Cocktail au Martini",
-            "2": "Builder",
-            "3": "Cocktail apéritif",
-            "5": "Porto Flip"
-        }
+        "login": "test",
+        "mdp": "azfazf",
+        "liked": []
     }
 ]

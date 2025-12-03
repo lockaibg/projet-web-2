@@ -1,7 +1,11 @@
 <?php
     session_start();
     $loginErreur = false;
-    if(isset($_POST["login"])) {
+    if(isset($_POST["login_"])) {
+        $_POST["login"] = $_POST["login_"];
+        unset($_POST["login_"]);
+        $_POST["mdp"] = $_POST["mdp_"];
+        unset($_POST["mdp_"]);
         $error = array();
         if (!preg_match("/^([A-Za-zÀ-ÿ\ ]+([\-\'][A-Za-zÀ-ÿ\ ]+)*)*$/", $_POST["name"])) {
             $error["name"] = true;
@@ -41,7 +45,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/> 
     <title>Enregistrement</title>
-    <link rel="stylesheet" href="../styles.css">    
+    <link rel="stylesheet" href="../styles.css">
+    <script src="../js/rechercheValidator.js"></script>
 </head>
 <body>
     <header>
@@ -119,12 +124,12 @@
 
         
         
-        <label for="login">Login</label>
-        <input type="text" id="login" name="login" required>
+        <label for="login_">Login</label>
+        <input type="text" id="login_" name="login_" required>
         <?php if(isset($error["login"])) { ?><p style="color: red;">Login : Uniquement chiffres et lettres</p><?php } else { ?> <br /> <br /><?php } ?>
         
-        <label for="mdp">Mot de passe :</label>
-        <input type="password" id="mdp" name="mdp" required><br><br>
+        <label for="mdp_">Mot de passe :</label>
+        <input type="password" id="mdp_" name="mdp_" required><br><br>
 
         Vous êtes :  
         <input type="radio" name="sexe" value="f"/> une femme     
