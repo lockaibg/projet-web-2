@@ -46,7 +46,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/> 
     <title>Profil</title>
-    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="../style_register.css">
     <script src="../js/rechercheValidator.js"></script>
 </head>
 <body>
@@ -122,7 +122,7 @@
     <h1>Modifier le profil</h1>
     
     <h2>Bonjour <?php echo $donnees["login"]; ?></h2><br/>
-    <form method="POST" action="#">
+    <form method="POST" action="#" class="register">
         Vous êtes :  
         <input type="radio" name="sexe" value="f" <?php if(isset($donnees["sexe"])) if($donnees["sexe"] == "f") echo "checked"; ?>/> une femme     
         <input type="radio" name="sexe" value="h" <?php if(isset($donnees["sexe"])) if($donnees["sexe"] == "h") echo "checked"; ?>/> un homme

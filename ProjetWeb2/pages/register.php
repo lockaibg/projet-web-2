@@ -45,7 +45,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/> 
     <title>Enregistrement</title>
-    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="../style_register.css">
     <script src="../js/rechercheValidator.js"></script>
 </head>
 <body>
@@ -120,7 +120,7 @@
     ?>
     <h1>Créer un compte</h1>
     <br/>
-    <form method="POST" action="#">
+    <form method="POST" action="#" class="register">
 
         
         

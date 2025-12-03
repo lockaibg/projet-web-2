@@ -12,6 +12,14 @@ body {
     color: #222;
 }
 
+h1 {
+    text-align: center;
+}
+
+h2 {
+    text-align: center;
+}
+
 /* HEADER / NAVIGATION HAUT DE PAGE */
 
 header {
@@ -86,9 +94,35 @@ header img {
     margin-left: 0.25rem;
 }
 
+
+.main {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+    padding: 1rem;
+}
+
+/* Le nav occupe une petite colonne à gauche */
+nav {
+    padding: auto;
+    color: darkblue;
+    border: solid 2px black;
+    width: 400px; /* tu peux ajuster */
+    flex-shrink: 0; /* empêche nav de se réduire */
+}
+
+nav ul {
+    list-style: none;
+}
+
+#selection {
+    padding-left: 10px;
+    padding-bottom: 5px;
+}
 /* PAGE RECETTE DÉTAILLÉE (id=recette) */
 
 #recette {
+    flex: 1;
     max-width: 900px;
     margin: 2rem auto;
     padding: 1.5rem;
@@ -99,14 +133,6 @@ header img {
     display: grid;
     grid-template-columns: minmax(0, 2fr) auto;
     gap: 1.5rem;
-}
-
-/* Titre au-dessus du bloc si tu gardes le <p id="Cocktail_de..."> */
-#Cocktail_de_jus_de_fruits_pour_les_enfants {
-    max-width: 900px;
-    margin: 1.5rem auto 0.5rem;
-    font-size: 1.4rem;
-    font-weight: 600;
 }
 
 /* Typo à l’intérieur du bloc recette */
