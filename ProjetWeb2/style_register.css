@@ -28,8 +28,6 @@ h2 {
     box-shadow: 0 3px 10px rgba(0,0,0,0.08);
     font-size: 1rem;
 }
-
-/* Titre (legend) */
 .register legend {
     font-size: 1.4rem;
     font-weight: 700;
@@ -37,8 +35,6 @@ h2 {
     color: #b91c1c;
     text-align: center;
 }
-
-/* Labels + inputs */
 .register label {
     font-weight: 600;
     display: block;
@@ -56,13 +52,11 @@ h2 {
     margin-bottom: 16px;
 }
 
-/* Radios */
 .register input[type="radio"] {
     margin-left: 8px;
     margin-right: 4px;
 }
 
-/* Bouton */
 .register input[type="submit"] {
     width: 100%;
     padding: 10px;
@@ -93,7 +87,6 @@ header > ul {
     padding: 0.75rem 1.5rem;
 }
 
-/* Sous-liste (admin / profil / déconnexion) */
 header > ul > li > ul {
     list-style: none;
     display: flex;
@@ -101,7 +94,6 @@ header > ul > li > ul {
     align-items: center;
 }
 
-/* Liens de navigation */
 header a {
     color: #fff;
     text-decoration: none;
@@ -112,7 +104,6 @@ header a:hover {
     text-decoration: underline;
 }
 
-/* Formulaire de recherche dans le header */
 header form#recherche {
     display: flex;
     align-items: center;
@@ -144,8 +135,6 @@ header form input[type="submit"] {
 header form input[type="submit"]:hover {
     background: #ff8b60;
 }
-
-/* IMAGES COEURS DANS LE HEADER */
 
 header img {
     vertical-align: middle;

@@ -1,4 +1,4 @@
-/* RESET SIMPLE */
+
 
 * {
     box-sizing: border-box;
@@ -20,7 +20,7 @@ h2 {
     text-align: center;
 }
 
-/* HEADER / NAVIGATION HAUT DE PAGE */
+
 
 header {
     background: #222;
@@ -35,7 +35,7 @@ header > ul {
     padding: 0.75rem 1.5rem;
 }
 
-/* Sous-liste (admin / profil / déconnexion) */
+
 header > ul > li > ul {
     list-style: none;
     display: flex;
@@ -43,7 +43,7 @@ header > ul > li > ul {
     align-items: center;
 }
 
-/* Liens de navigation */
+
 header a {
     color: #fff;
     text-decoration: none;
@@ -54,7 +54,6 @@ header a:hover {
     text-decoration: underline;
 }
 
-/* Formulaire de recherche dans le header */
 header form#recherche {
     display: flex;
     align-items: center;
@@ -87,7 +86,7 @@ header form input[type="submit"]:hover {
     background: #ff8b60;
 }
 
-/* IMAGES COEURS DANS LE HEADER */
+
 
 header img {
     vertical-align: middle;
@@ -102,13 +101,12 @@ header img {
     padding: 1rem;
 }
 
-/* Le nav occupe une petite colonne à gauche */
 nav {
     padding: auto;
     color: darkblue;
     border: solid 2px black;
-    width: 400px; /* tu peux ajuster */
-    flex-shrink: 0; /* empêche nav de se réduire */
+    width: 400px; 
+    flex-shrink: 0;
 }
 
 nav ul {
@@ -119,7 +117,6 @@ nav ul {
     padding-left: 10px;
     padding-bottom: 5px;
 }
-/* PAGE RECETTE DÉTAILLÉE (id=recette) */
 
 #recette {
     flex: 1;
@@ -135,7 +132,6 @@ nav ul {
     gap: 1.5rem;
 }
 
-/* Typo à l’intérieur du bloc recette */
 #recette h1 {
     font-size: 1.6rem;
     margin-bottom: 0.75rem;
@@ -151,7 +147,6 @@ nav ul {
     line-height: 1.5;
 }
 
-/* Image à droite dans la page détaillée */
 #recette img {
     display: block;
     max-width: 220px;
@@ -159,8 +154,6 @@ nav ul {
     border-radius: 6px;
     object-fit: cover;
 }
-
-/* ADAPTATION MOBILE POUR LA PAGE DÉTAILLÉE */
 
 @media (max-width: 768px) {
     #recette {
@@ -172,8 +165,6 @@ nav ul {
         justify-self: center;
     }
 }
-
-/* FIL D’ARIANE */
 
 #filAriane {
     max-width: 1100px;
@@ -198,8 +189,6 @@ nav ul {
     content: "";
 }
 
-/* SECTION LISTE DES RECETTES (liked.php + navigation) */
-
 #recettes {
     max-width: 1100px;
     margin: 1.5rem auto 3rem;
@@ -210,36 +199,30 @@ nav ul {
     gap: 1.5rem;
 }
 
-/* Carte contenant chaque cocktail (le <div style="border: solid;">) */
 #recettes > div {
     background: #fff;
     border-radius: 8px;
-    border: 1px solid #ddd; /* ton style inline "border: solid" sera surchargé visuellement */
+    border: 1px solid #ddd; 
     padding: 1rem;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 }
 
-/* Si une seule carte dans #recettes : largeur max = 25% de la page, centrée */
 #recettes > div:only-child {
     max-width: 25%;
     min-width: 260px;
     margin-inline: auto;
 }
 
-/* Bloc .cocktail à l’intérieur de chaque carte */
-
 .cocktail {
-    cursor: pointer; /* cliquable pour afficher la recette complète */
+    cursor: pointer; 
 }
 
 .cocktail h3 {
     font-size: 1.1rem;
     margin-bottom: 0.5rem;
 }
-
-/* Image de la carte */
 
 .cocktail img {
     display: block;
@@ -249,8 +232,6 @@ nav ul {
     border-radius: 6px;
     margin-bottom: 0.5rem;
 }
-
-/* Liste des ingrédients */
 
 .cocktail ul {
     list-style: none;
@@ -263,23 +244,17 @@ nav ul {
     padding: 0.1rem 0;
 }
 
-/* Bloc like / dislike sous chaque cocktail */
-
 [id$="_like"] {
     margin-top: 0.5rem;
     display: flex;
     justify-content: center;
 }
 
-/* Images de cœur */
-
 .heartFull,
 .heartLess {
     cursor: pointer;
     display: block;
 }
-
-/* LIENS CLIQUABLES SPÉCIAUX (classe elemClickable dans ton JS) */
 
 .elemClickable {
     text-decoration: none;
@@ -290,13 +265,9 @@ nav ul {
     text-decoration: underline;
 }
 
-/* GLOBAL TYPO / TITRES SIMPLES POUR D’AUTRES PAGES */
-
 h1, h2, h3 {
     font-family: inherit;
 }
-
-/* PETITES ADAPTATIONS RESPONSIVE GÉNÉRALES */
 
 @media (max-width: 600px) {
     header > ul {
